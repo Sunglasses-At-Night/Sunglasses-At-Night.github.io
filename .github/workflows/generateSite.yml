@@ -25,6 +25,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '10.x'
+      - name: Install NPM Modules
+        run: |
+          npm install --force
       - name: Clean
         uses: heowc/action-hexo@main
         with:
