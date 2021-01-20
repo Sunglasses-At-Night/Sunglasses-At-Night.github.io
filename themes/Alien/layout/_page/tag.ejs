@@ -1,0 +1,15 @@
+<%# single tag page%>
+<div class="container">
+    <div class="container">
+        <div class="columns">
+          <div class="column col-2"></div>
+            <div class="column col-8"> 
+                <div class="post-wrap tags">
+                    <h2 class="post-title">-&nbsp;Tag&nbsp;·&nbsp;<%-page.tag%>-</h2>
+                </div>
+                <%- partial('archive', {pagination: config.tag, index: true}) %>
+            </div>
+            <div class="column col-2"></div>
+        </div>
+    </div>
+</div>

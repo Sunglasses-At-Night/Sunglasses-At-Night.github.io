@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="columns">
+    <div class="column col-2"></div>
+      <div class="column col-8">
+        <div class="post-wrap archive">
+          <% var last_year = ''; %>
+          <% page.posts.each(function (post, i) { %>
+            <% var cur_year = post.date.year(); %>
+               <% if(last_year !== cur_year){ %>
+                  <h3><%- cur_year %></h3>
+               <% last_year = cur_year; } %>
+               <div class="card bg-dark">
+                 <div class="card-header">
+                   <div class="card-title h5 text-light"><%= post.title %></div>
+                   <div class="card-subtitle text-gray">Last Updated: <%- date(post.date, theme.date_format) %></div>
+                 </div>
+               <div class="card-footer">
+                        <a class="btn btn-primary" href="<%- url_for(post.path) %>">View Post</a>
+                    </div>
+                </div>
+                <br>
+            <% }) %>
+            <%- partial('_partial/paginator') %>
+        </div>
+      </div>
+    <div class="column col-2"></div>
+    </div>
+</div>
+

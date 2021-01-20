@@ -1,0 +1,29 @@
+To create a new post, copy `_copyMe.md` to `YourTitle.md`
+Make sure to update the information at the top! (title, authors, tags, date, etc)
+
+
+If using VSCode, open the _posts folder for (most) embedded images to work.
+Also, if you are using VSCode, use the markdown preview. It's worth it.
+
+Inline HTML (including style and script tags) works.
+
+SPECTRE.CSS is included and can be used: https://picturepan2.github.io/spectre/ .
+
+Please test on mobile, if possible. Use relative viewports/scaling whenever possible.
+
+Files prefixed with "_" will be ignored.
+
+# If the theme is updated, `hexo generate --force` must be run in `~/Artifacts/Blog/` on the server as the `git` user.
+# I can do this for you, but please don't edit the styling without good reason as it will affect all posts/authors.
+
+Keep posts decently professional.
+
+
+
+TODO:
+- Collapsible headers
+- Load-on-scroll content
+- AOS? (https://michalsnik.github.io/aos/)
+- Fix issues with site based on google's and web.dev's site tester.
+- Consider a private testing site for non-complete posts.
+- Consider setting a second push repo on GitHub.

@@ -1,0 +1,57 @@
+<header>
+    <style>
+        .navbar {
+            /* position: fixed; */
+            top: 0;
+            width: 100%;
+            height: 6%;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            background: #5755d9;
+            z-index: 5;
+            position: absolute;
+        }
+
+        @media screen and (min-width: 170px) {
+            .navbar {
+                display: flex;
+            }
+
+            .main {
+                padding-top: 0pt;
+            }
+        }
+    </style>
+    <!-- NAV -->
+    <header class="navbar">
+        <section class="navbar-section">
+            <!-- <div class="navbar-header header-logo"><a href="<%- config.root %>"><%= theme.navname %></a></div> -->
+        </section>
+        <section class="navbar-center aos-init aos-animate">
+            <a class="btn btn-link text-light aos-init aos-animate" href="/">Home</a>
+            <% for (var i in theme.nav){ %>
+                <a class="btn btn-link text-light" href="<%- url_for(theme.nav[i]) %>">
+                    <%= i %>
+                </a>
+                <% } %>
+        </section>
+        <section class="navbar-section">
+            <!-- <input id="switch_default" type="checkbox" class="switch_default"> -->
+            <!-- <label for="switch_default" class="toggleBtn"></label> -->
+        </section>
+    </header>
+</header>
+<br><br>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>

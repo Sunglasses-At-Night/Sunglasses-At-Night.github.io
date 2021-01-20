@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="<%= config.language %>">
+<head>
+    <%- partial('_partial/head',{cache: true}) %>
+</head>
+<style>
+.dark-color-main {
+    background-color: #121212;
+}
+</style>
+<body class="dark-color-main text-light">
+    <br><br><br><br>
+    <div class="wrapper">
+        <%- partial('_partial/header',{cache: true}) %>
+        <div class="main">
+            <%- body %>
+        </div>
+        <%- partial('_partial/footer',{cache: true}) %>
+    </div>
+</body>
+</html>
