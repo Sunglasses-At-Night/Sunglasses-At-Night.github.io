@@ -25,10 +25,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '10.x'
-      - name: Clean
-        uses: heowc/action-hexo@main
-        with:
-          args: clean
       - name: Generate
         uses: heowc/action-hexo@main
         with:
