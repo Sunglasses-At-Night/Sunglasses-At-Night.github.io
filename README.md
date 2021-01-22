@@ -10,7 +10,7 @@
 [![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/Sunglasses-At-Night/Sunglasses-At-Night.github.io?color=%235755DF&logo=github&label=Pull%20Requests)](https://GitHub.com/Sunglasses-At-Night/Sunglasses-At-Night.github.io/pulls/)
 
 <p align="center">
-  <img width="300" src="img/Logo.svg">
+  <img width="300" src="img/Logo.svg"
 </p>
 
 This repository hosts the [0x00000000.dev](https://0x00000000.dev) developer blog.
