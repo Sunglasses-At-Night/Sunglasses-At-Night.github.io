@@ -28,6 +28,9 @@ jobs:
       - name: Install NPM Modules
         run: |
           npm install --force
+      - name: Generate CNAME
+        run: |
+          echo 0x00000000.dev > CNAME
       - name: Clean
         uses: heowc/action-hexo@main
         with:
