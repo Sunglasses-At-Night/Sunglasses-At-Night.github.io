@@ -292,7 +292,7 @@ Key Terms:
 
 - **Frame**: One game processing frame / update loop.
 - **Work State**: One of three stages a chunk will go through to be processed fully.
-- **Work State Loop**: One loop of all three work state steps. 
+- **Work State Loop**: One loop of all three work state steps.
 
 Our system uses three work states for processing chunks. These work states only allow a certain type, and by extension a certain amount, of work to be done on chunks for any given grouping of frames.
 This technique greatly reduces lag spikes a user will experience from loading chunks.
@@ -376,7 +376,7 @@ if (_workState == WORK_STATE.FILL)
 
 A rough example of 2D priority queueing, a cross-section of the 3D chunk loaded cube, is demonstrated as an interactive demo below. Move your cursor around to see which chunks have priority to be loaded relative to your cursor.
 
-**Note:** This demo's source code does not reflect the project's implementation. It is purely for a visual understanding of the concept.
+**Note:** This demo's source code does not reflect the project's implementation. It is purely for a visual understanding of the chunk loading concept.
 
 <p align="center">
 <iframe class="child" src="https://www.openprocessing.org/sketch/1052217/embed/"></iframe>
