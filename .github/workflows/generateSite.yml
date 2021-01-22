@@ -39,7 +39,7 @@ jobs:
       - name: Generate CNAME
         run: |
           echo 0x00000000.dev > CNAME
-          echo 0x00000000.dev > docs/CNAME
+          echo "0x00000000.dev" | sudo tee docs/CNAME
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
