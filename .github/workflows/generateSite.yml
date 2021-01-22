@@ -28,9 +28,6 @@ jobs:
       - name: Install NPM Modules
         run: |
           npm install --force
-      - name: Generate CNAME
-        run: |
-          echo 0x00000000.dev > CNAME
       - name: Clean
         uses: heowc/action-hexo@main
         with:
@@ -39,6 +36,10 @@ jobs:
         uses: heowc/action-hexo@main
         with:
           args: generate
+      - name: Generate CNAME
+        run: |
+          echo 0x00000000.dev > CNAME
+          echo 0x00000000.dev > docs/CNAME
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
