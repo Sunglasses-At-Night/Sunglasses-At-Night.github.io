@@ -1,7 +1,7 @@
 # The 0x00000000.dev Developer Blog
 
 ![Deployment Passing](https://img.shields.io/github/workflow/status/Sunglasses-At-Night/Sunglasses-At-Night.github.io/Deploy?color=%235755DF&label=Deploy&logo=github)
-[![Website status](https://img.shields.io/website?down_message=offline&label=Site&up_color=5755df&up_message=online&url=https%3A%2F%2Fwww.0x00000000.dev%2F?logo=)](https://www.0x00000000.dev/)
+[![Website status](https://img.shields.io/website?down_message=offline&label=Site&up_color=5755df&up_message=online&url=https%3A%2F%2F0x00000000.dev%2F?logo=)](https://0x00000000.dev/)
 
 [![GitHub contributors](https://img.shields.io/github/contributors/Sunglasses-At-Night/Sunglasses-At-Night.github.io?color=%235755DF&label=Contributors&logo=github)](https://GitHub.com/Sunglasses-At-Night/Sunglasses-At-Night.github.io/graphs/contributors/)
 ![Repository Size](https://img.shields.io/github/repo-size/Sunglasses-At-Night/Sunglasses-At-Night.github.io?color=%235755DF&label=Repo%20Size&logo=github)
