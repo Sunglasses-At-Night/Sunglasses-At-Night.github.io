@@ -117,6 +117,12 @@ git push
 Once you have pushed, a GitHub action will run and the new site will be pushed to the `generated` branch's `docs/` folder. This folder is then hosted by GitHub pages.\
 Please be patient as this may take some time to propagate. You may also need to force reload the page to overwrite local page caching (`CRTL+SHIFT+R` on Chrome).
 
+## Pull Requests
+
+As we accept pull requests, they will be reviewed and merged in.
+
+Any major issues will be posted to the PR's thread and they must be fixed before your PR will be merged in.
+
 ## Notes
 
 - Do _not_ modify the `generated` branch unless you are attempting to fix an error in the auto-deploy GitHub action.
