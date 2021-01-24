@@ -56,6 +56,7 @@ It is recommended that you install the following extensions:
     - Posts use Markdown so having tools is nice.
   - MarkdownLint
     - It's pedantic, but worth it to keep post consistency. You can ignore some of the warnings it generates.
+    - You will notice there is a `.markdownlint.json` with line length and inline HTML warnings disabled.
   - Spell Right
     - Spellchecking is good.
   - Grammarly

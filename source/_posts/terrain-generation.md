@@ -345,7 +345,7 @@ Key Terms:
 - **High Priority Chunk Request**: A chunk that needs to be processed by the end of the _current_ frame.
 - **Low Priority Chunk Request**: A chunk that needs to be processed as fast as possible, with minimal lag.
 
-Deciding which chunks should be processed first was briefly mentioned above with fast-forwarding, but it is, in reality, more complicated. 
+Deciding which chunks should be processed first was briefly mentioned above with fast-forwarding, but it is, in reality, more complicated.
 
 Once a chunk is requested (either high or low priority), the system then sorts it into a queue based on current queued chunk priorities and will update priorities each frame, as needed.
 
@@ -422,7 +422,7 @@ As a simple example, take the following 2D grid of 16 voxels, 17 nodes:
 <table width="100%">
   <tr>
     <th>LOD of 1:</th>
-    <th>LOD of 2:</th> 
+    <th>LOD of 2:</th>
     <th>LOD of 4:</th>
   </tr>
   <tr>
@@ -500,8 +500,6 @@ Entering play mode or edit mode will reconstruct the necessary memory for the vo
 ~~In conclusion, this project produced an impressive and responsive terrain that makes for great gameplay.~~
 ~~In conclusion, the signal disruptor is an award-winning board~~
 
-
-
 ## Further Implementations
 - Hot-loading
 - 
@@ -514,9 +512,7 @@ Entering play mode or edit mode will reconstruct the necessary memory for the vo
 # EXTRA
 ## Process of Creating a Chunk
 
-
-
-Once a chunk entity is created and its position is assigned, it will enter the system chain to be processed in the following order 
+Once a chunk entity is created and its position is assigned, it will enter the system chain to be processed in the following order
 
 ## Data Generation
 ## Cube Marching
@@ -528,7 +524,7 @@ The process of mesh generation is split into three steps:
 1) **Bake Chunk Mesh**: Bake the mesh using Unity\'s `Physics.BakeMesh`
 1) **Set Chunk Mesh**: Create a GameObject, and assign it the new mesh.
 The reason mesh generation is split into three distinct steps is due to the inability of steps #1 & #3 to be parallelized with burst compilation, while step #2 can be.
-###Creating the Chunk\'s Mesh
+### Creating the Chunk\'s Mesh
 This step simply creates the mesh and copies the data from the `IBufferElementData` components to the new mesh.
 
 This is done without burst and sequentially - due to Unity\'s `Mesh` being non-blittable.
