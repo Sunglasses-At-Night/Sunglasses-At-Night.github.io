@@ -11,7 +11,7 @@ date: 2021-01-24 01:01:01
 
 ## Introduction
 
-ImGUI is one of the most popular graphical user interface libraries available for content creation, debugging, and visualization tools. As this library can be used for many applications, it often becomes highly entangled and messy to work with.
+ImGUI is one of the most popular graphical user interface libraries available for content creation, debugging, and visualization tools. Since this library can be used for many applications, it often becomes highly entangled and messy to work with.
 
 As a game developer, I was tasked with implementing the main framework and a large amount of ImGUI content for a game called [Arc Apellago](https://store.steampowered.com/app/1454430/Arc_Apellago/). It was overall a simple game, but it also contained a surprising amount of ImGUI content.
 
@@ -19,12 +19,12 @@ As a game developer, I was tasked with implementing the main framework and a lar
 
 ## Designing the Interface
 
-Given the design of ImGUI, content separated across windows with some content on them, so how can we clean the code up?
+Given the design of ImGUI, content separated across windows with some content on them, how can we clean the code up?
 
-<img src="/images/ModularImGUI/ImGuiWindow.png" alt="ImGUI Window" width="300px"/>
-![Arc Apellago ImGUI](/images/ModularImGUI/ArcApellagoImGUI.png)
+<!-- <img src="/images/ModularImGUI/ImGuiWindow.png" alt="ImGUI Window" width="300px"/> -->
+![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindow.png)
 
-For one, we can contain all of the functionality and related information for our given window in its own object. So far, a window is just a context and some updated content. First, let's make a class that holds a `title`, a `showWindow_` class variable, and an `Update` to update this window's content.
+For one, we can contain all the functionality and related information for our given window in its own object. So far, a window is just a context and some updated content. First, let us make a class that holds a `title`, a `showWindow_` class variable, and an `Update` to update this window's content.
 
 A parent class that follows these requirements could look as follows:
 
@@ -44,13 +44,17 @@ private:
 };
 ```
 
-As seen in the previous image, this window contains three major pieces of content:
+When the previous image is reduced and grouped, you get the following:
+
+![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindowSmall.png)
+
+This reduced-content window contains three major pieces of content:
 
 - FPS / Display Statistics
 - Debug Settings
 - Collision Settings
 
-As these are only related as configuration/stats, lets break these up as well. To do so, let's create another class, `EditorBlock` which can be attached to `EditorWindow`s.
+As these are only related as configuration/stats content, we can break these up as well. To do so, let us create another class, `EditorBlock`, which can be attached to any `EditorWindow`.
 
 ```c++
 class EditorBlock
@@ -64,7 +68,8 @@ public:
 };
 ```
 
-These blocks of content are quite simple - just an update for the content they should display.
+These blocks of content are quite simple - just an update for the content they should display./
+They both allow for separation of code and allows multiple teammates' content on the same window if you are working on a team.
 
 Next, we must adapt our current `EditorWindow` to store these `EditorBlock`s.
 
@@ -91,7 +96,11 @@ It should be noted that the `Update` function will now just call the `EditorBloc
 
 ## Creating a Block
 
-As an example of using the blocks, the following is the `StatsEditorBlock`.
+As an example of using the blocks, let's implement the `StatsEditorBlock` which displays the following:
+
+![Stats Editor Block](/images/ModularImGUI/ImGUIStatsBlock.png)
+
+**Note:** The `ImGUI FPS` stat has been omitted for simplicity.
 
 `StatsEditorBlock.h`
 
@@ -105,7 +114,7 @@ public:
 };
 ```
 
-Note that creating a class for each block allows it to implement helper methods and have internal state variables (which are often useful).
+Note that creating a class for each block allows it to implement helper methods and have internal state variables - which are often useful.
 
 `StatsEditorBlock.cpp`
 
@@ -128,6 +137,8 @@ void StatsEditorBlock::Update(float dt)
 ## Using the Interface
 
 Now that all the functionality is abstracted out and self-contained in other classes, the interface is as simple as choosing which blocks go where.
+
+![Stats Editor Block](/images/ModularImGUI/ImGUIWindowBlocks.png)
 
 ```c++
 // Create a window and give it a title
