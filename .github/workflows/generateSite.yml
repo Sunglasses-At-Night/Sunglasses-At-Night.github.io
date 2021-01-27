@@ -21,9 +21,7 @@ jobs:
           git push origin --delete generated
           git fetch
           git checkout main
-          git checkout generated
-          git checkout origin/main -- source/_posts
-          git checkout origin/main -- source/images
+          git checkout -b generated
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
