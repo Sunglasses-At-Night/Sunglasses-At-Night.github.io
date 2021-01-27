@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="0x00000000.dev">
+
+
+
+
+
+<title>Modular ImGUI | 0x00000000 Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.1.1"></head>
+<style>
+.dark-color-main {
+    background-color: #121212;
+}
+</style>
+<body class="dark-color-main text-light">
+    <br><br><br><br>
+    <div class="wrapper">
+        <header>
+    <style>
+        .navbar {
+            /* position: fixed; */
+            top: 0;
+            width: 100%;
+            height: 6%;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            background: #5755d9;
+            z-index: 5;
+            position: absolute;
+        }
+
+        @media screen and (min-width: 170px) {
+            .navbar {
+                display: flex;
+            }
+
+            .main {
+                padding-top: 0pt;
+            }
+        }
+    </style>
+    <!-- NAV -->
+    <header class="navbar">
+        <section class="navbar-section">
+            <!-- <div class="navbar-header header-logo"><a href="/">0x00000000 Blog</a></div> -->
+        </section>
+        <section class="navbar-center aos-init aos-animate">
+            <a class="btn btn-link text-light aos-init aos-animate" href="/">Home</a>
+            
+                <a class="btn btn-link text-light" href="/archives">
+                    Posts
+                </a>
+                
+                <a class="btn btn-link text-light" href="/tags">
+                    Tags
+                </a>
+                
+        </section>
+        <section class="navbar-section">
+            <!-- <input id="switch_default" type="checkbox" class="switch_default"> -->
+            <!-- <label for="switch_default" class="toggleBtn"></label> -->
+        </section>
+    </header>
+</header>
+<br><br>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.classList.contains("active")) {
+            toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        } else {
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+        <article class="post-wrap columns">
+            <style>
+                .div-only-mobile {
+                    display: none;
+                }
+
+                .div-no-mobile {
+                    display: block;
+                }
+
+                @media screen and (max-width: 849px) {
+                    .div-no-mobile {
+                        display: none
+                    }
+
+                    .div-only-mobile {
+                        display: block;
+                    }
+                }
+
+                ul {
+                    list-style-position: outside;
+                }
+
+                ol ol, ol ul, ul ol, ul ul {
+                    margin: 0 0 0 0;
+                }
+
+                .text-light {
+                    color: #e8e8e8!important;
+                }
+
+            </style>
+            <div class="column col-2 div-no-mobile"></div>
+            <div class="column">
+                <header class="post-header">
+                    <h1 class="post-title">
+                        Modular ImGUI
+                    </h1>
+                    
+                        <div class="post-meta">
+                            
+                                <a class="text-light">Author: <a class="text-gray">
+                                        Calin Gavriliuc
+                                    </a></a>
+                                
+                                    <br>
+                                    
+                                        <a class="text-light">Date: <a class="text-gray">
+                                                January 24, 2021
+                                            </a></a>
+                                        
+                        </div>
+                        
+                </header>
+                <div class="post-content">
+                    <h1 id="A-More-Modular-ImGUI-Method"><a href="#A-More-Modular-ImGUI-Method" class="headerlink" title="A More Modular ImGUI Method"></a>A More Modular ImGUI Method</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>ImGUI is one of the most popular graphical user interface libraries available for content creation, debugging, and visualization tools. Since this library can be used for many applications, it often becomes highly entangled and messy to work with.</p>
+<p>As a game developer, I was tasked with implementing the main framework and a large amount of ImGUI content for a game called <a target="_blank" rel="noopener" href="https://store.steampowered.com/app/1454430/Arc_Apellago/">Arc Apellago</a>. It was overall a simple game, but it also contained a surprising amount of ImGUI content.</p>
+<p><img src="/images/ArcApellagoImGUI.png" alt="Arc Apellago ImGUI"></p>
+<h2 id="Designing-the-Interface"><a href="#Designing-the-Interface" class="headerlink" title="Designing the Interface"></a>Designing the Interface</h2><p>Given the design of ImGUI, content separated across windows with some content on them, how can we clean the code up?</p>
+<!-- <img src="/images/ImGuiWindow.png" alt="ImGUI Window" width="300px"/> -->
+<p><img src="/images/ImGUIWindow.png" alt="Arc Apellago ImGUI"></p>
+<p>For one, we can contain all the functionality and related information for our given window in its own object. So far, a window is just a context and some updated content. First, let us make a class that holds a <code>title</code>, a <code>showWindow_</code> class variable, and an <code>Update</code> to update this window’s content.</p>
+<p>A parent class that follows these requirements could look as follows:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EditorWindow</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">EditorWindow</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> title)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">virtual</span> ~EditorWindow();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Update</span><span class="params">(<span class="keyword">float</span> dt)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> title_;</span><br><span class="line">    <span class="keyword">bool</span> showWindow_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>When the previous image is reduced and grouped, you get the following:</p>
+<p><img src="/images/ImGUIWindowSmall.png" alt="Arc Apellago ImGUI"></p>
+<p>This reduced-content window contains three major pieces of content:</p>
+<ul>
+<li>FPS / Display Statistics</li>
+<li>Debug Settings</li>
+<li>Collision Settings</li>
+</ul>
+<p>As these are only related as configuration/stats content, we can break these up as well. To do so, let us create another class, <code>EditorBlock</code>, which can be attached to any <code>EditorWindow</code>.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EditorBlock</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  EditorBlock() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">virtual</span> ~EditorBlock() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Update</span><span class="params">(<span class="keyword">float</span> dt)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>These blocks of content are quite simple - just an update for the content they should display./<br>They both allow for separation of code and allows multiple teammates’ content on the same window if you are working on a team.</p>
+<p>Next, we must adapt our current <code>EditorWindow</code> to store these <code>EditorBlock</code>s.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EditorWindow</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">explicit</span> <span class="title">EditorWindow</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> title)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">virtual</span> ~EditorWindow();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Update</span><span class="params">(<span class="keyword">float</span> dt)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">AddBlock</span><span class="params">(EditorBlock* editorBlock)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> title_;</span><br><span class="line">    xvector&lt;EditorBlock*&gt; blocks_;</span><br><span class="line">    <span class="keyword">bool</span> showWindow_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>It should be noted that the <code>Update</code> function will now just call the <code>EditorBlock</code>s’ <code>Update</code> functions.</p>
+<h2 id="Creating-a-Block"><a href="#Creating-a-Block" class="headerlink" title="Creating a Block"></a>Creating a Block</h2><p>As an example of using the blocks, let’s implement the <code>StatsEditorBlock</code> which displays the following:</p>
+<p><img src="/images/ImGUIStatsBlock.png" alt="Stats Editor Block"></p>
+<p><strong>Note:</strong> The <code>ImGUI FPS</code> stat has been omitted for simplicity.</p>
+<p><code>StatsEditorBlock.h</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;EditorBlock.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StatsEditorBlock</span> :</span> <span class="keyword">public</span> EditorBlock</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span><span class="params">(<span class="keyword">float</span> dt)</span> <span class="keyword">override</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Note that creating a class for each block allows it to implement helper methods and have internal state variables - which are often useful.</p>
+<p><code>StatsEditorBlock.cpp</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;imgui.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;StatsEditorBlock.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StatsEditorBlock::Update</span><span class="params">(<span class="keyword">float</span> dt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Get the needed information from ImGUI</span></span><br><span class="line">    <span class="keyword">auto</span> io = ImGui::GetIO();</span><br><span class="line">    <span class="comment">// Display the FPS</span></span><br><span class="line">    ImGui::Text(<span class="string">&quot;FPS: %f&quot;</span>, io.Framerate);</span><br><span class="line">    <span class="comment">// Display the display size</span></span><br><span class="line">    ImGui::Text(<span class="string">&quot;Display X:%d&quot;</span>, <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(io.DisplaySize.x));</span><br><span class="line">    ImGui::Text(<span class="string">&quot;Display Y:%d&quot;</span>, <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(io.DisplaySize.y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Using-the-Interface"><a href="#Using-the-Interface" class="headerlink" title="Using the Interface"></a>Using the Interface</h2><p>Now that all the functionality is abstracted out and self-contained in other classes, the interface is as simple as choosing which blocks go where.</p>
+<p><img src="/images/ImGUIWindowBlocks.png" alt="Stats Editor Block"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a window and give it a title</span></span><br><span class="line"><span class="keyword">auto</span> statsConfigWindow = <span class="keyword">new</span> EditorWindow(<span class="string">&quot;Stats and Config&quot;</span>);</span><br><span class="line"><span class="comment">// Add a stats block, debug draw config block, and collision config block to the window</span></span><br><span class="line">statsConfigWindow-&gt;AddBlock(<span class="keyword">new</span> StatsEditorBlock());</span><br><span class="line">statsConfigWindow-&gt;AddBlock(<span class="keyword">new</span> DebugDrawConfigBlock());</span><br><span class="line">statsConfigWindow-&gt;AddBlock(<span class="keyword">new</span> CollisionConfigBlock());</span><br><span class="line"><span class="comment">// Add the window to the main ImGUI update list</span></span><br><span class="line">windows_.emplace_back(statsConfigWindow);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>This layout separates unrelated code into manageable blocks to allow for easier layout planning and code decoupling. With ImGUI’s initialization and update code out of the way, it will be much easier for your teammates to create ImGUI blocks or windows as they require - this played a large role in my team’s final ImGUI implementation.</p>
+<hr>
+<p><strong>Some final notes and tips:</strong></p>
+<ul>
+<li>Use the <code>ifdef</code> paradigm to compile-out ImGUI from your project if you don’t want to ship with it and <em>test that this define works regularly</em>.</li>
+<li>Check out the <a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/tree/docking">docking</a> branch of ImGUI to help organize your ImGUI windows further.</li>
+</ul>
+<hr>
+
+                </div>
+                
+                        <section class="post-tags">
+                            <div>
+                                <span>Tag(s):</span>
+                                <span class="tag">
+                                    
+                                        
+                                            <a href="/tags/ImGUI/"># ImGUI</a>
+                                            
+                                            <a href="/tags/GameDev/"># GameDev</a>
+                                            
+                                                
+                                </span>
+                            </div>
+                            <div>
+                                <a href="javascript:window.history.back();">back</a>
+                                <span>· </span>
+                                <a href="/">home</a>
+                            </div>
+                        </section>
+                        <section class="post-nav">
+                            
+                                    
+                                        <a class="next" rel="next" href="/terrain-generation/">
+                                            Unity Marching Cubes Terrain Generation
+                                        </a>
+                                        
+                        </section>
+            </div>
+            <div class="column col-2 div-no-mobile">
+                
+                    
+                        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+                            
+            </div>
+        </article>
+</div>
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+<!-- © 0x00000000.dev |  -->
+        <span>Powered by <a href="https://hexo.io" target="_blank">Hexo</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

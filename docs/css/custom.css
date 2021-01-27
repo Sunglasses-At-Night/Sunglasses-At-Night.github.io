@@ -1,0 +1,5 @@
+.post-content h1::before {
+  content: "#";
+  margin-right: 5px;
+  color: #807fe2;
+}
