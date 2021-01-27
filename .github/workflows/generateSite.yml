@@ -1,12 +1,10 @@
 name: Deploy
-
 on:
   push:
     branches:
       - main
 jobs:
   build:
-
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +15,7 @@ jobs:
       - name: Create Branch
         run: |
           git fetch
-          git push origin --delete generated
+          git push origin --delete generated &>/dev/null
           git fetch
           git checkout -b generated
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
