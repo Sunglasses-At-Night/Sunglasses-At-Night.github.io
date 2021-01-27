@@ -1,4 +1,5 @@
 name: Deploy
+
 on:
   push:
     branches:
@@ -11,15 +12,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: main
-      - name: Create Branch
+          ref: generated
+      - name: Merge main  
         run: |
-          git fetch
-          git push origin --delete generated &>/dev/null || true
-          git fetch
-          git checkout -b generated
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git fetch
+          git checkout main
+          git checkout generated
+          git checkout origin/main -- source/_posts
+          git checkout origin/main -- source/images
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
@@ -27,6 +29,9 @@ jobs:
       - name: Install NPM Modules
         run: |
           npm install --force
+      - name: Delete docs
+        run: |
+          sudo rm -r docs/
       - name: Clean
         uses: heowc/action-hexo@main
         with:
@@ -37,12 +42,13 @@ jobs:
           args: generate
       - name: Generate CNAME
         run: |
+          echo 0x00000000.dev > CNAME
           echo "0x00000000.dev" | sudo tee docs/CNAME
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add docs/ -f
+          git add * -f
           git commit -m "Generated 0x00000000.dev site."
       - name: Push Changes
         uses: ad-m/github-push-action@master
