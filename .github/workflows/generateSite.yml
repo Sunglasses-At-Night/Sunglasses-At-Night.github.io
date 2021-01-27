@@ -37,13 +37,12 @@ jobs:
           args: generate
       - name: Generate CNAME
         run: |
-          echo 0x00000000.dev > CNAME
           echo "0x00000000.dev" | sudo tee docs/CNAME
       - name: Commit files
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add * -f
+          git add docs/ -f
           git commit -m "Generated 0x00000000.dev site."
       - name: Push Changes
         uses: ad-m/github-push-action@master
