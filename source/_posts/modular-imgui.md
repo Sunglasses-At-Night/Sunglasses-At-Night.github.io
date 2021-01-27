@@ -15,14 +15,14 @@ ImGUI is one of the most popular graphical user interface libraries available fo
 
 As a game developer, I was tasked with implementing the main framework and a large amount of ImGUI content for a game called [Arc Apellago](https://store.steampowered.com/app/1454430/Arc_Apellago/). It was overall a simple game, but it also contained a surprising amount of ImGUI content.
 
-![Arc Apellago ImGUI](/images/ModularImGUI/ArcApellagoImGUI.png)
+![Arc Apellago ImGUI](/images/ArcApellagoImGUI.png)
 
 ## Designing the Interface
 
 Given the design of ImGUI, content separated across windows with some content on them, how can we clean the code up?
 
-<!-- <img src="/images/ModularImGUI/ImGuiWindow.png" alt="ImGUI Window" width="300px"/> -->
-![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindow.png)
+<!-- <img src="/images/ImGuiWindow.png" alt="ImGUI Window" width="300px"/> -->
+![Arc Apellago ImGUI](/images/ImGUIWindow.png)
 
 For one, we can contain all the functionality and related information for our given window in its own object. So far, a window is just a context and some updated content. First, let us make a class that holds a `title`, a `showWindow_` class variable, and an `Update` to update this window's content.
 
@@ -46,7 +46,7 @@ private:
 
 When the previous image is reduced and grouped, you get the following:
 
-![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindowSmall.png)
+![Arc Apellago ImGUI](/images/ImGUIWindowSmall.png)
 
 This reduced-content window contains three major pieces of content:
 
@@ -98,7 +98,7 @@ It should be noted that the `Update` function will now just call the `EditorBloc
 
 As an example of using the blocks, let's implement the `StatsEditorBlock` which displays the following:
 
-![Stats Editor Block](/images/ModularImGUI/ImGUIStatsBlock.png)
+![Stats Editor Block](/images/ImGUIStatsBlock.png)
 
 **Note:** The `ImGUI FPS` stat has been omitted for simplicity.
 
@@ -138,7 +138,7 @@ void StatsEditorBlock::Update(float dt)
 
 Now that all the functionality is abstracted out and self-contained in other classes, the interface is as simple as choosing which blocks go where.
 
-![Stats Editor Block](/images/ModularImGUI/ImGUIWindowBlocks.png)
+![Stats Editor Block](/images/ImGUIWindowBlocks.png)
 
 ```c++
 // Create a window and give it a title
