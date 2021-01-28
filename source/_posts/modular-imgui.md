@@ -11,7 +11,7 @@ date: 2021-01-24 01:01:01
 
 ## Introduction
 
-ImGUI is one of the most popular graphical user interface libraries available for content creation, debugging, and visualization tools. Since this library can be used for many applications, it often becomes highly entangled and messy to work with.
+[ImGUI](https://github.com/ocornut/imgui) is one of the most popular graphical user interface libraries available for content creation, debugging, and visualization tools. Since this library can be used for many applications, it often becomes highly entangled and messy to work with.
 
 As a game developer, I was tasked with implementing the main framework and a large amount of ImGUI content for a game called [Arc Apellago](https://store.steampowered.com/app/1454430/Arc_Apellago/). It was overall a simple game, but it also contained a surprising amount of ImGUI content.
 
@@ -22,7 +22,7 @@ As a game developer, I was tasked with implementing the main framework and a lar
 Given the design of ImGUI, content separated across windows with some content on them, how can we clean the code up?
 
 <!-- <img src="/images/ModularImGUI/ImGuiWindow.png" alt="ImGUI Window" width="300px"/> -->
-![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindow.png)
+![Arc Apellago ImGUI Window](/images/ModularImGUI/ImGUIWindow.png)
 
 For one, we can contain all the functionality and related information for our given window in its own object. So far, a window is just a context and some updated content. First, let us make a class that holds a `title`, a `showWindow_` class variable, and an `Update` to update this window's content.
 
@@ -46,7 +46,7 @@ private:
 
 When the previous image is reduced and grouped, you get the following:
 
-![Arc Apellago ImGUI](/images/ModularImGUI/ImGUIWindowSmall.png)
+![Arc Apellago ImGUI Small Window](/images/ModularImGUI/ImGUIWindowSmall.png)
 
 This reduced-content window contains three major pieces of content:
 
@@ -138,7 +138,7 @@ void StatsEditorBlock::Update(float dt)
 
 Now that all the functionality is abstracted out and self-contained in other classes, the interface is as simple as choosing which blocks go where.
 
-![Stats Editor Block](/images/ModularImGUI/ImGUIWindowBlocks.png)
+![Arc Apellago ImGUI Window Sections](/images/ModularImGUI/ImGUIWindowBlocks.png)
 
 ```c++
 // Create a window and give it a title
