@@ -33,6 +33,7 @@ For example, if the View were to be swapped out, it would still be referencing t
 
 The diagram below shows what model takes data from whom. The Controller takes data from both View and Model, while the View takes data from the Model.
 
+![MVC Diagram](/images/mvc.png.png)
 
 ## Variants
 
