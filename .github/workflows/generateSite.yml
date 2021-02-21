@@ -39,7 +39,7 @@ jobs:
       - name: Generate
         uses: heowc/action-hexo@main
         with:
-          args: generate
+          args: generate --force
       - name: Generate CNAME
         run: |
           echo 0x00000000.dev > CNAME
