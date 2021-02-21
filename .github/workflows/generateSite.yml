@@ -22,6 +22,7 @@ jobs:
           git checkout generated
           git checkout origin/main -- source/_posts
           git checkout origin/main -- source/images
+          git checkout origin/main -- themes
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
@@ -39,7 +40,7 @@ jobs:
       - name: Generate
         uses: heowc/action-hexo@main
         with:
-          args: generate --force
+          args: generate
       - name: Generate CNAME
         run: |
           echo 0x00000000.dev > CNAME
