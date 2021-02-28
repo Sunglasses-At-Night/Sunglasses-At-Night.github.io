@@ -68,7 +68,7 @@ public:
 };
 ```
 
-These blocks of content are quite simple - just an update for the content they should display./
+These blocks of content are quite simple - just an update for the content they should display.
 They both allow for separation of code and allows multiple teammates' content on the same window if you are working on a team.
 
 Next, we must adapt our current `EditorWindow` to store these `EditorBlock`s.
@@ -87,7 +87,7 @@ public:
 
 private:
     std::string title_;
-    xvector<EditorBlock*> blocks_;
+    std::vector<EditorBlock*> blocks_;
     bool showWindow_;
 };
 ```
