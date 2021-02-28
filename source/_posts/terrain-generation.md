@@ -479,7 +479,7 @@ Click the left mouse button to toggle addition/subtraction.
 ### Editor Mode
 
 Procedural generation is typically executed at runtime. In other words, our voxel terrain would only be visible upon launching the game into Play Mode.
-However, this is problematic in the case where we would like to edit our scene. How would determine where to place a sign sticking out of the ground, or a treasure chest?
+However, this is problematic in the case where we would like to edit our scene. How would we determine where to place a sign sticking out of the ground, or a treasure chest?
 We'd need a way to edit the scene with the world already constructed. Our solution is editor-time world loading.  
 
 By using proximity loading of our chunks as found at runtime, we may move the player around in the scene to load whichever portion is needed to us.
