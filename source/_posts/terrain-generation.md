@@ -179,7 +179,7 @@ The orange points at the corners indicate that they are part of the ground, whil
 
 ![Marching Example](/images/MarchingExample.png)
 
-The above image was constructed by setting all the voxels' density values within a spherical radius of the center of the sphere to +1 (ground / filled state), and outside of the radius to -1 (air / empty state). The algorithm considers the transition between the ground (positive values) and the air (negative values) to be where the surface manifests, which is why our surface is a radial shape from the center of the sphere.
+The above image was constructed by setting all the voxels' density values within a spherical radius of the center of the sphere to +1 (ground / filled state), and outside of the radius to 0 (air / empty state). The algorithm considers the transition between the ground (positive values) and the air (negative values) to be where the surface manifests, which is why our surface is a radial shape from the center of the sphere.
 
 ### Smoothing
 
@@ -187,11 +187,11 @@ Now we have a solid terrain to work with, but something is missing. What about t
 
 ![Marching Example Smooth](/images/MarchingExampleSmooth.png)
 
-One method of doing so is by setting the density values to a gradient ranging from +1 to -1, where +1 is the center of the sphere, 0 is the surface, and -1 is the boundary of our voxel grid. In this case, the boundary would be `2 * radius` or the `diameter` of the "world sphere".
+One method of doing so is by setting the density values to a gradient ranging from +1 to 0, where +1 is the center of the sphere, 0.5 is the surface, and 0 is the boundary of our voxel grid. In this case, the boundary would be `2 * radius` or the `diameter` of the "world sphere".
 
 ![Marching Cubes Density Gradient](/images/MarchingCubesDensityGradient.png)
 
-Another method of achieving this effect is through a similar technique. Instead of treating the whole "world sphere" as a gradient, only treat the region around the surface as a gradient. This becomes especially useful when applied in a game setting since most nodes are either `1` or `-1` and not a floating point value.
+Another method of achieving this effect is through a similar technique. Instead of treating the whole "world sphere" as a gradient, only treat the region around the surface as a gradient. This becomes especially useful when applied in a game setting since most nodes are either `1` or `0` and not a floating point value.
 
 ![Marching Cubes Density Gradient](/images/MarchingCubesDensityGradientEnhanced.png)
 
