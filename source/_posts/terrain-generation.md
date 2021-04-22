@@ -278,6 +278,9 @@ It should be noted that, as a trivial form of optimization, only chunks changed 
 
 These load and unload requests are performed within Unity Jobs to further utilize the player's CPU cores from a multithreaded approach and to keep consistency with the rest of the systems.
 
+
+![Terrain Manager Flow Chart](/images/TerrainGeneration/TerrainManagerJobSystem.png)
+
 ### Performance
 
 Due to real-time gameplay restrictions and the amount of terrain a player is required to load, chunk generation/loading/marching needs to be highly optimized.
@@ -333,7 +336,7 @@ if (!ProcessingChunks())
 
 Provided is a visual example of breaking up two sets of jobs across two frames:
 
-![Terrain Manager Flow Chart](/images/TerrainGeneration/BreakingUpJobs.png)
+![Breaking Up Terrain Jobs](/images/TerrainGeneration/BreakingUpJobs.png)
 
 It should be noted that, despite this optimization being applied, the nature of this game requires some chunks to be processed immediately. For example, if a player deforms/destroys part of the terrain, the changed chunks must be processed immediately as to not produce visual lag to the user. These chunks are "fast-forwarded" through this system and are processed within one frame.
 
@@ -347,7 +350,7 @@ In general, each work stage will take a maximum of three frames. This technique 
 
 After allowing cross-frame jobs, after this optimization is applied, you can see the job (`GenerateHeightJob` in purple) running across two game frames as to not hold the main gameplay thread:
 
-![Terrain Manager Flow Chart](/images/TerrainGeneration/CrossFrameJobs.png)
+![Cross-Frame Jobs](/images/TerrainGeneration/CrossFrameJobs.png)
 
 #### Maximizing Usage & Throttling
 
@@ -360,7 +363,7 @@ As with the previously mentioned techniques, it is important to maximize usage o
 This optimization technique is most effective when the user loads _many_ chunks at once, such as when they first load the world.\
 The following image shows all chunks around the player being populated with height values in one go:
 
-![Terrain Manager Flow Chart](/images/TerrainGeneration/JobSystemOverload.png)
+![Job System Overload](/images/TerrainGeneration/JobSystemOverload.png)
 
 While this maximizes CPU usage, this ends up halting any single chunk from loading/rendering for a player until _all_ chunks have been processed - which far from ideal. This also has the side effect of preventing those threads from being used by any other job(s) during their processing.
 
@@ -368,7 +371,7 @@ Instead, using a per-frame burst of one-job-per-thread (or more, depending on a 
 
 Using one job on each thread in per frame, a much more reasonable result is produced:
 
-![Terrain Manager Flow Chart](/images/TerrainGeneration/SingleFrameJobBurst.png)
+![Single Frame Burst](/images/TerrainGeneration/SingleFrameJobBurst.png)
 
 #### Priority Queueing
 
