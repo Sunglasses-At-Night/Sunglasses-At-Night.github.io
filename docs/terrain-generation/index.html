@@ -318,6 +318,14 @@ $( document ).ready(function() {
 <p>We do this by loading a <code>2n</code> by <code>2n</code> by <code>2n</code> cube around the player. You can take <code>n</code> number of chunks in each axis (<code>[x+n, x-n]</code>, <code>[y+n, y-n]</code>, and <code>[z+n, z-n]</code>) outward from the player and request them to be loaded.<br>Similarly if a loaded chunk falls outside of this cube, unload it.</p>
 <p><img src="/images/TerrainGeneration/ChunkLoadingDistances.png" alt="Chunk Loading Distances"></p>
 <p>When loading and unloading chunks, it was important to remember that chunks share edge data so borders of chunks cannot be edited without neighboring chunks being loaded first to preserve this “synced” state.</p>
+<p>Initial implementations of chunk loading a small region around the player produces the following:</p>
+<p align="center">
+<video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
+  <source src="/images/TerrainGeneration/InitialChunkLoading.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+</p>
+
 <h3 id="Chunk-Serialization"><a href="#Chunk-Serialization" class="headerlink" title="Chunk Serialization"></a>Chunk Serialization</h3><p><img src="/images/TerrainGeneration/TerrainManagerFlowChartTerrainSerializer.png" alt="Terrain Manager Flow Chart Terrain Serializer"></p>
 <p>For our implementation, we used a simple approach for storing chunks to a file. Given a known size of a chunk (n by n by n nodes), we can read and write entire 3D arrays of data as their binary representation. This is done for both the density and resource values.</p>
 <p>It should be noted that, as a trivial form of optimization, only chunks changed by the player are saved to the disk. Since our terrain generation is deterministic and faster than loading chunks, it is faster to re-generate the chunk on request compared to loading that chunk from the disk. This, in return, also saves on disk space.</p>
@@ -346,7 +354,7 @@ $( document ).ready(function() {
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Do the required work for this frame</span></span><br><span class="line">ProcessChunks();</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the current &quot;work state&quot; is still being processed, do not move to the next work state</span></span><br><span class="line"><span class="keyword">if</span> (!ProcessingChunks())</span><br><span class="line">&#123; </span><br><span class="line">  <span class="comment">// Move on to the next &quot;work state&quot; for next frame</span></span><br><span class="line">  _workState = _workState <span class="keyword">switch</span> &#123;</span><br><span class="line">    WORK_STATE.FILL =&gt; WORK_STATE.MARCH, <span class="comment">// Generate/Load/Populate chunk with data</span></span><br><span class="line">    WORK_STATE.MARCH =&gt; WORK_STATE.MESH, <span class="comment">// Cube march the chunk</span></span><br><span class="line">    WORK_STATE.MESH =&gt; WORK_STATE.FILL,  <span class="comment">// Generate the chunk&#x27;s mesh</span></span><br><span class="line">    _ =&gt; _workState</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Provided is a visual example of breaking up two sets of jobs across two frames:</p>
-<p><img src="/images/TerrainGeneration/BreakingUpJobs.png" alt="Terrain Manager Flow Chart"></p>
+<p><img src="/images/TerrainGeneration/BreakingUpJobs.png" alt="Breaking Up Terrain Jobs"></p>
 <p>It should be noted that, despite this optimization being applied, the nature of this game requires some chunks to be processed immediately. For example, if a player deforms/destroys part of the terrain, the changed chunks must be processed immediately as to not produce visual lag to the user. These chunks are “fast-forwarded” through this system and are processed within one frame.</p>
 <h4 id="Cross-Frame-Work"><a href="#Cross-Frame-Work" class="headerlink" title="Cross-Frame Work"></a>Cross-Frame Work</h4><p>Key Terms:</p>
 <ul>
@@ -354,18 +362,18 @@ $( document ).ready(function() {
 </ul>
 <p>In general, each work stage will take a maximum of three frames. This technique gives jobs the ability to span across multiple frames, if needed, causing processing spikes on the CPU to “average out”.</p>
 <p>After allowing cross-frame jobs, after this optimization is applied, you can see the job (<code>GenerateHeightJob</code> in purple) running across two game frames as to not hold the main gameplay thread:</p>
-<p><img src="/images/TerrainGeneration/CrossFrameJobs.png" alt="Terrain Manager Flow Chart"></p>
+<p><img src="/images/TerrainGeneration/CrossFrameJobs.png" alt="Cross-Frame Jobs"></p>
 <h4 id="Maximizing-Usage-amp-Throttling"><a href="#Maximizing-Usage-amp-Throttling" class="headerlink" title="Maximizing Usage &amp; Throttling"></a>Maximizing Usage &amp; Throttling</h4><p>Key Terms:</p>
 <ul>
 <li><strong>Job’s Average Processing Requirements</strong>: The amount of work/time a given job takes/requires when being processed by the CPU. Generally, this is a rough estimate.</li>
 </ul>
 <p>As with the previously mentioned techniques, it is important to maximize usage of the CPU while also not overloading it. Given a set of chunks to be processed, instead of computing all of them in one go, breaking up that set into batches based on CPU speed / CPU core count / a job’s average processing requirements is a good way to determine how many chunks to process in one complete work state loop.</p>
 <p>This optimization technique is most effective when the user loads <em>many</em> chunks at once, such as when they first load the world.<br>The following image shows all chunks around the player being populated with height values in one go:</p>
-<p><img src="/images/TerrainGeneration/JobSystemOverload.png" alt="Terrain Manager Flow Chart"></p>
+<p><img src="/images/TerrainGeneration/JobSystemOverload.png" alt="Job System Overload"></p>
 <p>While this maximizes CPU usage, this ends up halting any single chunk from loading/rendering for a player until <em>all</em> chunks have been processed - which far from ideal. This also has the side effect of preventing those threads from being used by any other job(s) during their processing.</p>
 <p>Instead, using a per-frame burst of one-job-per-thread (or more, depending on a job’s average length) paradigm allows for maximizing thread usage without blocking other jobs or preventing rendering/loading. </p>
 <p>Using one job on each thread in per frame, a much more reasonable result is produced:</p>
-<p><img src="/images/TerrainGeneration/SingleFrameJobBurst.png" alt="Terrain Manager Flow Chart"></p>
+<p><img src="/images/TerrainGeneration/SingleFrameJobBurst.png" alt="Single Frame Burst"></p>
 <h4 id="Priority-Queueing"><a href="#Priority-Queueing" class="headerlink" title="Priority Queueing"></a>Priority Queueing</h4><p>Key Terms:</p>
 <ul>
 <li><strong>High Priority Chunk Request</strong>: A chunk that needs to be processed by the end of the <em>current</em> frame.</li>
