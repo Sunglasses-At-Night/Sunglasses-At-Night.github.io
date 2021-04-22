@@ -223,17 +223,18 @@ $( document ).ready(function() {
 
 <h2 id="About-the-Authors"><a href="#About-the-Authors" class="headerlink" title="About the Authors"></a>About the Authors</h2><p>Calin Gavriliuc: Engine Programmer<br>Jonathan Bourim: Graphics Engineer &amp; Engine Programmer</p>
 <p>We are Computer Science students at the DigiPen Institute of Technology, and have been working on game projects together for several years.</p>
-<p><a target="_blank" rel="noopener" href="https://store.steampowered.com/search/?developer=Handshake%20Firm">Here</a> are some game we have worked on:<br><img src="/images/ArcApellago.jpg" alt="ArcApellago"><br><img src="/images/DeltaBlade2700.jpg" alt="DeltaBlade2700"></p>
+<p><a target="_blank" rel="noopener" href="https://store.steampowered.com/search/?developer=Handshake%20Firm">Here</a> are some game we have worked on:</p>
+<p><img src="/images/TerrainGeneration/ArcApellago.jpg" alt="ArcApellago"><br><img src="/images/TerrainGeneration/DeltaBlade2700.jpg" alt="DeltaBlade2700"></p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Project Cleanser is a year-long team game project that we’ve been working on together. It’s a sandbox game set on a large planet, where the player hunts, digs, and upgrades their equipment to challenge the core at the center of the world.</p>
 <p>While we were brainstorming ideas for our new, year-long game project, we encountered many interesting videos showcasing voxel techniques, such as procedural world generation and deformation.</p>
 <p>Inspired by Astroneer, we decided to implement a similar method of terrain generation and deformation for our project.</p>
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=NG1gJvdCE4Q">Some Inspiration</a></p>
-<h2 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It"></a>What Is It</h2><h3 id="Voxels"><a href="#Voxels" class="headerlink" title="Voxels"></a>Voxels</h3><p>Voxels are a volumetric representation of a point in 3D space. While pixels are representative of data in a small <strong>area</strong>, voxels are representative of data in a small <strong>volume</strong>. These values exist on a 3D grid, and have each point in that grid set to a particular value. With our goal being to make terrain, we used these values to determine the density of the terrain at that point.<br>Density for our volume means it exists in one of two states, <strong>filled</strong> (part of the ground), or <strong>empty</strong> (air).</p>
-<h3 id="Cube-Marched-Terrain-Generation"><a href="#Cube-Marched-Terrain-Generation" class="headerlink" title="Cube Marched Terrain Generation"></a>Cube Marched Terrain Generation</h3><p>The marching cubes algorithm is a fast way to generate a polygonal mesh from a height/density field. We use this algorithm to generate triangles for a mesh from a density field. It is a relatively simple, fast, and efficient algorithm that has been used in many applications.</p>
+<h2 id="What-Is-It"><a href="#What-Is-It" class="headerlink" title="What Is It"></a>What Is It</h2><h3 id="Voxels"><a href="#Voxels" class="headerlink" title="Voxels"></a>Voxels</h3><p>Voxels are a volumetric representation of a point in 3D space. While pixels are representative of data in a small <strong>area</strong>, voxels are representative of data in a small <strong>volume</strong>. These values exist on a 3D grid, and have each point in that grid set to a value. With our goal being to make terrain, we used these values to determine the density of the terrain at that point.<br>Density for our volume means it exists in one of two states, <strong>filled</strong> (part of the ground), or <strong>empty</strong> (air).</p>
+<h3 id="Cube-Marched-Terrain-Generation"><a href="#Cube-Marched-Terrain-Generation" class="headerlink" title="Cube Marched Terrain Generation"></a>Cube Marched Terrain Generation</h3><p>The marching cubes algorithm is a fast way to generate a polygonal mesh from a height/density field. This algorithm is used to generate triangles for a mesh from a density field. It is a relatively simple, fast, and efficient algorithm that has been used in many applications.</p>
 <p>The end result can be seen in the following video.</p>
 <p align="center">
 <video playsinline autoplay loop muted controls class="desktop-50-mobile-100">
-  <source src="/images/CubeMarchingSculpting.webm" type="video/webm">
+  <source src="/images/TerrainGeneration/CubeMarchingSculpting.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </p>
@@ -248,7 +249,7 @@ $( document ).ready(function() {
 </ul>
 <p><strong>Multi-threading:</strong></p>
 <ul>
-<li>Due to the gargantuan number of math operations that occur when our terrain is generated or modified, performance is the primary concern of this implementation.</li>
+<li>Due to the number of math operations that occur when our terrain is generated or modified, performance is the primary concern of this implementation.</li>
 <li>We must leverage Unity’s Job system for multi-threading to maximize the performance of our terrain generation.</li>
 </ul>
 <p><strong>Load Balancing:</strong></p>
@@ -257,7 +258,7 @@ $( document ).ready(function() {
 </ul>
 <p><strong>Dynamic Loading:</strong></p>
 <ul>
-<li>Our world is a large, planet-like environment. As voxels are stored values representing our world, those values must be stored somewhere.</li>
+<li>Our world is a large, planet-like, environment. As voxels are stored values representing our world, those values must be stored somewhere.</li>
 <li>We quickly approach the limitations of modern hardware if we store all of these values in our active memory.  </li>
 </ul>
 <p><strong>Determinism / Seeding:</strong></p>
@@ -267,29 +268,33 @@ $( document ).ready(function() {
 </ul>
 <p><strong>Spherical Terrain:</strong></p>
 <ul>
-<li>As our world is a spherical planet, we needed the ability generate terrain in a radial manner. This includes developing a spherical, mountainous surface with a cavernous core.</li>
+<li>As our world is a spherical planet, we needed the ability generate terrain in a radial manner. This includes developing a spherical, mountainous, surface with a cavernous core.</li>
 </ul>
 <h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><hr>
-<p>The following is a simplified overview of the pipeline:<br><img src="/images/TerrainManagerFlowChart.png" alt="Terrain Manager Flow Chart"></p>
+<p>The following is a simplified overview of the pipeline:<br><img src="/images/TerrainGeneration/TerrainManagerFlowChart.png" alt="Terrain Manager Flow Chart"></p>
 <h2 id="Chunks"><a href="#Chunks" class="headerlink" title="Chunks"></a>Chunks</h2><p>In the above examples, we have shown visual representations of our density values, but what is assigning them their mesh and position in the world?<br>We use a type we call <strong>Chunks</strong> to store this data and to pass it through our pipelines. In essence, a chunk is a single cube that contains a batch of voxels in the world.<br>Chunks contain the following information:  </p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Chunk coordinate representing its position among all chunks</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> position;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Density of each voxel</span></span><br><span class="line"><span class="keyword">public</span> NativeArray&lt;<span class="keyword">float</span>&gt; densities;</span><br><span class="line"><span class="comment">// Resource type of each voxel (iron, stone, etc)</span></span><br><span class="line"><span class="keyword">public</span> NativeArray&lt;Resource.Type&gt; resources;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mesh data (updates on any voxel change)</span></span><br><span class="line"><span class="keyword">public</span> NativeList&lt;float3&gt; vertices;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;<span class="keyword">int</span>&gt; triangles;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;float3&gt; normals;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;Color&gt; colors;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Level of detail of the chunk</span></span><br><span class="line"><span class="comment">// Best LOD being 1</span></span><br><span class="line"><span class="comment">// Must be powers of 2</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> lod;</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the chunk has changed since it was loaded</span></span><br><span class="line"><span class="comment">// For checking if it should be saved on unload</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">bool</span> hasChanged; </span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Chunk coordinate</span></span><br><span class="line"><span class="keyword">public</span> int3 position;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Density of each voxel (0.0f to 1.0f)</span></span><br><span class="line"><span class="keyword">public</span> NativeArray&lt;<span class="keyword">float</span>&gt; densities;</span><br><span class="line"><span class="comment">// Resource type of each voxel (iron, stone, etc)</span></span><br><span class="line"><span class="keyword">public</span> NativeArray&lt;Resource.Type&gt; resources;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Mesh data</span></span><br><span class="line"><span class="keyword">public</span> NativeList&lt;float3&gt; vertices;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;<span class="keyword">int</span>&gt; triangles;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;float3&gt; normals;</span><br><span class="line"><span class="keyword">public</span> NativeList&lt;Color&gt; colors;</span><br><span class="line"></span><br><span class="line"><span class="comment">// For sorting mesh data into sub-meshes</span></span><br><span class="line"><span class="keyword">public</span> NativeList&lt;Resource.Type&gt; resourceMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the chunk has been changed since it was loaded</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">bool</span> hasChanged;</span><br></pre></td></tr></table></figure>
 
-<p>The data buffers are Unity’s Native structures (C++ InterOp) to make use of the Burst Compiler.</p>
+<p>The data buffers are using Unity’s Native structures (C++ InterOp) to allow us to make use of the Burst Compiler.</p>
 <h2 id="Marching-Cubes-Algorithm"><a href="#Marching-Cubes-Algorithm" class="headerlink" title="Marching Cubes Algorithm"></a>Marching Cubes Algorithm</h2><h3 id="Triangulation"><a href="#Triangulation" class="headerlink" title="Triangulation"></a>Triangulation</h3><p>As mentioned above, the marching cube algorithm utilizes voxels to determine the density of a particular volume. This is interpreted as whether or not that point is part of the surface of our terrain. If we take the base case, a single voxel, we can look at its corner points to determine the triangle configuration of the cube that the voxel encompasses.</p>
-<p>These triangle configurations come in 15 variants:</p>
-<img src="/images/MarchingCubesConfigs.png" width="60%"/>
+<p>There exist 2^8 triangle configurations. Some can be seen below:</p>
+<img src="/images/TerrainGeneration/MarchingCubesConfigs.png" width="60%"/>
 
 <p>The orange points at the corners indicate that they are part of the ground, while the empty corners are air. If we extend this idea to a larger grid, these triangles will connect with one another to form the basis of the terrain depending on the configuration of these values.  </p>
-<p><img src="/images/MarchingExample.png" alt="Marching Example"></p>
-<p>The above image was constructed by setting all the voxels’ density values within a spherical radius of the center of the sphere to +1 (ground / filled state), and outside of the radius to 0 (air / empty state). The algorithm considers the transition between the ground (positive values) and the air (negative values) to be where the surface manifests, which is why our surface is a radial shape from the center of the sphere.</p>
-<h3 id="Smoothing"><a href="#Smoothing" class="headerlink" title="Smoothing"></a>Smoothing</h3><p>Now we have a solid terrain to work with, but something is missing. What about the smooth terrain shown in the video at the top of this page, the sort of terrain you might see in Astroneer? The example above is when you treat your values as a boolean, either representing a value below the surface or above it. However, if we use these values to represent a gradient of density from one voxel to the next, we can utilize interpolation to alter the angle of the triangles we are constructing.</p>
-<p><img src="/images/MarchingExampleSmooth.png" alt="Marching Example Smooth"></p>
+<p><img src="/images/TerrainGeneration/MarchingExample.png" alt="Marching Example"></p>
+<p>The above image was constructed by setting all the voxels’ density values within a spherical radius of the center of the sphere to +1 (ground / filled state), and outside of the radius to 0 (air / empty state). The algorithm considers the transition between the ground and the air to be where the surface manifests, which is why our surface is a radial shape from the center of the sphere.</p>
+<h3 id="Smoothing"><a href="#Smoothing" class="headerlink" title="Smoothing"></a>Smoothing</h3><p>You get a blocky sphere when you treat your values as a boolean, either representing a value below the surface or above it. However, if we use a gradient of density values from one voxel to the next, we can utilize interpolation to alter the angle of the triangles we are constructing.</p>
+<p><strong>Smoothing Method 1:</strong></p>
 <p>One method of doing so is by setting the density values to a gradient ranging from +1 to 0, where +1 is the center of the sphere, 0.5 is the surface, and 0 is the boundary of our voxel grid. In this case, the boundary would be <code>2 * radius</code> or the <code>diameter</code> of the “world sphere”.</p>
-<p><img src="/images/MarchingCubesDensityGradient.png" alt="Marching Cubes Density Gradient"></p>
+<p><img src="/images/TerrainGeneration/MarchingCubesDensityGradient.png" alt="Marching Cubes Density Gradient"></p>
+<p><strong>Smoothing Method 2:</strong></p>
 <p>Another method of achieving this effect is through a similar technique. Instead of treating the whole “world sphere” as a gradient, only treat the region around the surface as a gradient. This becomes especially useful when applied in a game setting since most nodes are either <code>1</code> or <code>0</code> and not a floating point value.</p>
-<p><img src="/images/MarchingCubesDensityGradientEnhanced.png" alt="Marching Cubes Density Gradient"></p>
+<p><img src="/images/TerrainGeneration/MarchingCubesDensityGradientEnhanced.png" alt="Marching Cubes Density Gradient"></p>
+<p><strong>Final Result:</strong></p>
+<p>Regardless of which method is chosen, you get the following:</p>
+<p><img src="/images/TerrainGeneration/MarchingExampleSmooth.png" alt="Marching Example Smooth"></p>
 <p>This diagram shows how a surface is interpolated between two vertices with varying density values.</p>
-<img src="/images/MarchingCubesInterpolation.png" width="60%"/>
+<img src="/images/TerrainGeneration/MarchingCubesInterpolation.png" width="60%"/>
 <!--- Source link for the image above --->
 <a target="_blank" rel="noopener" href="http://jamie-wong.com/2014/08/19/metaballs-and-marching-squares/">
   <p style="text-align:center">
@@ -297,43 +302,29 @@ $( document ).ready(function() {
   </p>
 </a>
 
-<p>This, following the interpolation code, will achieve the smoothing explained above:</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">float3 <span class="title">InterpolateVerts</span>(<span class="params">float3 vertex1, float3 vertex2, <span class="keyword">float</span> densityValue1, <span class="keyword">float</span> densityValue2</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Interpolate from first vertex to second vertex relative to density difference</span></span><br><span class="line">    <span class="keyword">float</span> t = (-densityValue1) / (densityValue2 - densityValue1);</span><br><span class="line">    <span class="keyword">return</span> vertex1 + t * (vertex2 - vertex1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The following interpolation code, will achieve the smoothing shown above:</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Smooths densities between 0.0f and 1.0f</span></span><br><span class="line"><span class="comment">// ISO Level / Height is 0.5f</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> float3 <span class="title">InterpolateVerts</span>(<span class="params">float3 v1, float3 v2, </span></span></span><br><span class="line"><span class="function"><span class="params">                                <span class="keyword">float</span>  s1, <span class="keyword">float</span> s2</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> ISOLevel = <span class="number">0.5f</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> epsilon = <span class="number">0.00001f</span>;</span><br><span class="line">    <span class="comment">// Account for edge case using above epsilon value</span></span><br><span class="line">    <span class="keyword">if</span> (Mathf.Abs(ISOLevel - s1) &lt; epsilon ||</span><br><span class="line">        Mathf.Abs(ISOLevel - s2) &lt; epsilon ||</span><br><span class="line">        Mathf.Abs(s1 - s2) &lt; epsilon)</span><br><span class="line">        <span class="keyword">return</span> v1 + (v2 - v1) * (s1 - s2);</span><br><span class="line">    <span class="comment">// Lerp the point using the density values</span></span><br><span class="line">    <span class="keyword">float</span> t2 = (ISOLevel - s1) / (s2 - s1);</span><br><span class="line">    <span class="keyword">return</span> v1 + t2 * (v2 - v1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Chunk-Generation"><a href="#Chunk-Generation" class="headerlink" title="Chunk Generation"></a>Chunk Generation</h2><p><img src="/images/TerrainManagerFlowChartRequestChunk.png" alt="Terrain Manager Flow Chart"></p>
-<p>Now that we have our data container, and a method to act on that data, we need to fill it with the data it requires to function. Upon being requested, the chunk’s density values are generated and the chunk goes through a two-step process of executing the marching cubes algorithm and mesh construction.</p>
-<p>First, we use the marching cubes algorithm to identify the vertices, triangles, normals of each voxel during which we pick vertex colors. Then, we construct the mesh and bake the physics from the resulting data.</p>
-<h3 id="Stitching-and-Sharing-Chunk-Edge-Data"><a href="#Stitching-and-Sharing-Chunk-Edge-Data" class="headerlink" title="Stitching and Sharing Chunk Edge Data"></a>Stitching and Sharing Chunk Edge Data</h3><!--
-**TODO**
-- voxels occupy the regions between nodes
-- thus voxels share edges
-- In a multithreaded environment, it is important to package chunks as self-contained as to prevent read & write race conditions
-- Pros vs cons of unique edges vs duplicated data (i.e. memory vs multi-threading benefits)
-- Tearing due to sharing of chunk data (in some cases such as bad unity collision checks)
--->
-
-<p>An example of where one would need to be careful with duplication of data is <strong>deformation</strong>. Say if you were on the corner of several chunks sharing an edge, and you altered the density values of each of those chunks at different rates, that would break the idea that the values were duplicated. What results visually is a tearing effect, a gap in between the chunks. This requires additional attention to the synchronicity of the logic operating on the voxel data. </p>
-<p><img src="/images/VoxelTearing.png" alt="Voxel Tearing"></p>
-<ul>
-<li>Requirement of having to edit chunk edges only when all neighboring chunks are loaded</li>
-</ul>
-<!--
-### Chunk Terrain Generation
-***TODO***
--->
-
-<h3 id="Chunk-Loading"><a href="#Chunk-Loading" class="headerlink" title="Chunk Loading"></a>Chunk Loading</h3><p><img src="/images/TerrainManagerFlowChartChunkLoader.png" alt="Chunk Loader Flow Chart"></p>
+<h2 id="Chunk-Generation"><a href="#Chunk-Generation" class="headerlink" title="Chunk Generation"></a>Chunk Generation</h2><p><img src="/images/TerrainGeneration/TerrainManagerFlowChartRequestChunk.png" alt="Terrain Manager Flow Chart"></p>
+<p>Now that we have our data container, and a method to convert that data to a mesh, we need to populate the container with data. Upon being requested, the chunk’s density values are generated and the chunk goes through a two-step process of executing the marching cubes algorithm and mesh construction.</p>
+<h3 id="Stitching-and-Sharing-Chunk-Edge-Data"><a href="#Stitching-and-Sharing-Chunk-Edge-Data" class="headerlink" title="Stitching and Sharing Chunk Edge Data"></a>Stitching and Sharing Chunk Edge Data</h3><p>In a multithreaded environment, it is important to package chunks as self-contained structures as to prevent read &amp; write race conditions between threads. Since the cube marching algorithm generates triangles for the regions <em>between</em> nodes, voxels, it is not trivial to split up a 3D space into chunks of nodes.</p>
+<p>The solution to this is to share data between chunks in some way. In our case, we went with duplicating node in the positive x,y,z axis. This was a memory vs multithreading complexity tradeoff.</p>
+<p>With this system, we needed to be careful when modifying shared nodes between chunks. An example of where one would need to be careful with duplication of data is <strong>deformation</strong>. If you deform on the corner of several chunks sharing an edge at inconsistent rates, that would break the consistency of the duplicated values. What results visually is a tearing effect, a gap in between the chunks. This requires additional attention to the synchronicity of the logic operating on the voxel data. </p>
+<p><img src="/images/TerrainGeneration/VoxelTearing.png" alt="Voxel Tearing"></p>
+<p>Duplicated edge data also comes with the requirement of having to edit chunk edges only when all neighboring chunks are loaded as well.</p>
+<h3 id="Chunk-Terrain-Generation"><a href="#Chunk-Terrain-Generation" class="headerlink" title="Chunk Terrain Generation"></a>Chunk Terrain Generation</h3><p><strong>Coming Soon</strong></p>
+<h3 id="Chunk-Loading"><a href="#Chunk-Loading" class="headerlink" title="Chunk Loading"></a>Chunk Loading</h3><p><img src="/images/TerrainGeneration/TerrainManagerFlowChartChunkLoader.png" alt="Chunk Loader Flow Chart"></p>
 <p>Now that we can generate chunks that also look like interesting terrain, we need a way to selectively pick which chunks to load as to not overwhelm a user’s computer with generating an entire world and expecting it all to fit in their RAM. We call this chunk loading. Similarly, this is also applied to unloading chunks.</p>
 <p>We do this by loading a <code>2n</code> by <code>2n</code> by <code>2n</code> cube around the player. You can take <code>n</code> number of chunks in each axis (<code>[x+n, x-n]</code>, <code>[y+n, y-n]</code>, and <code>[z+n, z-n]</code>) outward from the player and request them to be loaded.<br>Similarly if a loaded chunk falls outside of this cube, unload it.</p>
-<p><img src="/images/ChunkLoadingDistances.png" alt="Chunk Loading Distances"></p>
+<p><img src="/images/TerrainGeneration/ChunkLoadingDistances.png" alt="Chunk Loading Distances"></p>
 <p>When loading and unloading chunks, it was important to remember that chunks share edge data so borders of chunks cannot be edited without neighboring chunks being loaded first to preserve this “synced” state.</p>
-<h3 id="Chunk-Serialization"><a href="#Chunk-Serialization" class="headerlink" title="Chunk Serialization"></a>Chunk Serialization</h3><p><img src="/images/TerrainManagerFlowChartTerrainSerializer.png" alt="Terrain Manager Flow Chart Terrain Serializer"></p>
-<p>For our implementation, we used a simple approach for storing chunks to a file. Given a known size of a chunk (n by n by n nodes), we can read and write entire 3D arrays of data as their binary representation. This is done for both the density and resource values.  </p>
+<h3 id="Chunk-Serialization"><a href="#Chunk-Serialization" class="headerlink" title="Chunk Serialization"></a>Chunk Serialization</h3><p><img src="/images/TerrainGeneration/TerrainManagerFlowChartTerrainSerializer.png" alt="Terrain Manager Flow Chart Terrain Serializer"></p>
+<p>For our implementation, we used a simple approach for storing chunks to a file. Given a known size of a chunk (n by n by n nodes), we can read and write entire 3D arrays of data as their binary representation. This is done for both the density and resource values.</p>
 <p>It should be noted that, as a trivial form of optimization, only chunks changed by the player are saved to the disk. Since our terrain generation is deterministic and faster than loading chunks, it is faster to re-generate the chunk on request compared to loading that chunk from the disk. This, in return, also saves on disk space.</p>
 <p>These load and unload requests are performed within Unity Jobs to further utilize the player’s CPU cores from a multithreaded approach and to keep consistency with the rest of the systems.</p>
 <h3 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h3><p>Due to real-time gameplay restrictions and the amount of terrain a player is required to load, chunk generation/loading/marching needs to be highly optimized.</p>
-<p>As this is one of the most performance-critical portions of this system, we use Unity’s Job system to multi-thread the execution of this code. Originally, we had experimented with compute shader pipelines, which is faster in normal circumstances. However, after performance testing, Unity’s Burst Compiler in conjunction with the job system has outpaced these compute pipelines due to the overhead of large data buffer I/O with the GPU. The overhead of I/O was larger than the time for operations to be performed on that buffer, ultimately resulting in CPU-based computation being faster.</p>
-<p><strong>Major sources of optimization:</strong></p>
+<p>As this is one of the most performance-critical portions of our game, we use Unity’s Job system to multi-thread the execution of this code. Originally, we had experimented with compute shader pipelines, which are faster in normal circumstances. However, after performance testing, Unity’s Burst Compiler in conjunction with the job system has outpaced these compute pipelines due to the overhead of large data buffer I/O with the GPU. The overhead of I/O was larger than the time for operations to be performed on that buffer, ultimately resulting in CPU-based computation being faster.</p>
+<h4 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h4><p><strong>Major sources of optimization:</strong></p>
 <ul>
 <li>Chunk Stages</li>
 <li>Cross-Frame Work</li>
@@ -341,7 +332,8 @@ $( document ).ready(function() {
 <li>Priority Queueing</li>
 <li>Level Of Detail (LOD)</li>
 </ul>
-<p>The following is frame-by-frame profiling of the chunk processing system using multiple distinct job stages and cross-frame job completion of the chunk request pipeline (after optimization):<br><img src="/images/TerrainManagerJobSystem.png" alt="Terrain Manager Flow Chart"></p>
+<p>The following is frame-by-frame profiling of the chunk processing system using multiple distinct job stages and cross-frame job completion of the chunk request pipeline (after optimization):<br><img src="/images/TerrainGeneration/TerrainManagerJobSystem.png" alt="Terrain Manager Flow Chart"></p>
+<p>You can see the main thread running horizontally across the top, and seven more threads running the jobs in parallel - in this case. </p>
 <h4 id="Chunk-Stages"><a href="#Chunk-Stages" class="headerlink" title="Chunk Stages"></a>Chunk Stages</h4><p>Key Terms:</p>
 <ul>
 <li><strong>Frame</strong>: One game processing frame / update loop.</li>
@@ -353,18 +345,27 @@ $( document ).ready(function() {
 <p>For any given frame, only process one of three work states:</p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Do the required work for this frame</span></span><br><span class="line">ProcessChunks();</span><br><span class="line"></span><br><span class="line"><span class="comment">// If the current &quot;work state&quot; is still being processed, do not move to the next work state</span></span><br><span class="line"><span class="keyword">if</span> (!ProcessingChunks())</span><br><span class="line">&#123; </span><br><span class="line">  <span class="comment">// Move on to the next &quot;work state&quot; for next frame</span></span><br><span class="line">  _workState = _workState <span class="keyword">switch</span> &#123;</span><br><span class="line">    WORK_STATE.FILL =&gt; WORK_STATE.MARCH, <span class="comment">// Generate/Load/Populate chunk with data</span></span><br><span class="line">    WORK_STATE.MARCH =&gt; WORK_STATE.MESH, <span class="comment">// Cube march the chunk</span></span><br><span class="line">    WORK_STATE.MESH =&gt; WORK_STATE.FILL,  <span class="comment">// Generate the chunk&#x27;s mesh</span></span><br><span class="line">    _ =&gt; _workState</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>Provided is a visual example of breaking up two sets of jobs across two frames:</p>
+<p><img src="/images/TerrainGeneration/BreakingUpJobs.png" alt="Terrain Manager Flow Chart"></p>
 <p>It should be noted that, despite this optimization being applied, the nature of this game requires some chunks to be processed immediately. For example, if a player deforms/destroys part of the terrain, the changed chunks must be processed immediately as to not produce visual lag to the user. These chunks are “fast-forwarded” through this system and are processed within one frame.</p>
 <h4 id="Cross-Frame-Work"><a href="#Cross-Frame-Work" class="headerlink" title="Cross-Frame Work"></a>Cross-Frame Work</h4><p>Key Terms:</p>
 <ul>
 <li><strong>Processing Spike</strong>: A period of higher stress on the CPU, often causing visual lag/“jumps” to the user.</li>
 </ul>
-<p>In general, each work stage will take a maximum of three frames. This technique gives jobs the ability to span across multiple frames, if needed, causing processing spikes on the CPU to “average out”.  </p>
+<p>In general, each work stage will take a maximum of three frames. This technique gives jobs the ability to span across multiple frames, if needed, causing processing spikes on the CPU to “average out”.</p>
+<p>After allowing cross-frame jobs, after this optimization is applied, you can see the job (<code>GenerateHeightJob</code> in purple) running across two game frames as to not hold the main gameplay thread:</p>
+<p><img src="/images/TerrainGeneration/CrossFrameJobs.png" alt="Terrain Manager Flow Chart"></p>
 <h4 id="Maximizing-Usage-amp-Throttling"><a href="#Maximizing-Usage-amp-Throttling" class="headerlink" title="Maximizing Usage &amp; Throttling"></a>Maximizing Usage &amp; Throttling</h4><p>Key Terms:</p>
 <ul>
 <li><strong>Job’s Average Processing Requirements</strong>: The amount of work/time a given job takes/requires when being processed by the CPU. Generally, this is a rough estimate.</li>
 </ul>
 <p>As with the previously mentioned techniques, it is important to maximize usage of the CPU while also not overloading it. Given a set of chunks to be processed, instead of computing all of them in one go, breaking up that set into batches based on CPU speed / CPU core count / a job’s average processing requirements is a good way to determine how many chunks to process in one complete work state loop.</p>
-<p>This optimization technique is most effective when the user loads <em>many</em> chunks at once, such as when they first load the world.</p>
+<p>This optimization technique is most effective when the user loads <em>many</em> chunks at once, such as when they first load the world.<br>The following image shows all chunks around the player being populated with height values in one go:</p>
+<p><img src="/images/TerrainGeneration/JobSystemOverload.png" alt="Terrain Manager Flow Chart"></p>
+<p>While this maximizes CPU usage, this ends up halting any single chunk from loading/rendering for a player until <em>all</em> chunks have been processed - which far from ideal. This also has the side effect of preventing those threads from being used by any other job(s) during their processing.</p>
+<p>Instead, using a per-frame burst of one-job-per-thread (or more, depending on a job’s average length) paradigm allows for maximizing thread usage without blocking other jobs or preventing rendering/loading. </p>
+<p>Using one job on each thread in per frame, a much more reasonable result is produced:</p>
+<p><img src="/images/TerrainGeneration/SingleFrameJobBurst.png" alt="Terrain Manager Flow Chart"></p>
 <h4 id="Priority-Queueing"><a href="#Priority-Queueing" class="headerlink" title="Priority Queueing"></a>Priority Queueing</h4><p>Key Terms:</p>
 <ul>
 <li><strong>High Priority Chunk Request</strong>: A chunk that needs to be processed by the end of the <em>current</em> frame.</li>
@@ -394,11 +395,11 @@ $( document ).ready(function() {
 <iframe class="child" src="https://www.openprocessing.org/sketch/1052217/embed/"></iframe>
 </p>
 
-<p>The maximum number of chunks a three-stage loop can process is given by the following:<br><code>Max(Number Of High Priority Chunk Count, Number Of Reasonable Chunks Per Stage Loop)</code><br>That is to say that high priority chunks are always processed with low priority chunks filling in any free slots.</p>
+<p>The maximum number of chunks a three-stage loop can process is given by the following:<br><code>Max(Number Of High Priority Chunk Count, Number Of Reasonable Chunks Per Stage Loop)</code><br>That is to say that high priority chunks are always processed with low priority chunks filling in any free slots in CPU cores.</p>
 <p>Using a priority queue and updating weights as needed, you get responsive chunk loading that can adapt quickly to, for example, changes in player position:</p>
 <p align="center">
 <video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
-  <source src="/images/TerrainChunkPriorityLoading.webm" type="video/webm">
+  <source src="/images/TerrainGeneration/TerrainChunkPriorityLoading.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </p>
@@ -406,7 +407,7 @@ $( document ).ready(function() {
 <p>Once applying a similar technique to chunk unloading, you get fluid and responsive terrain.</p>
 <p align="center">
 <video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
-  <source src="/images/TerrainChunkPriorityLoadingUnloading.webm" type="video/webm">
+  <source src="/images/TerrainGeneration/TerrainChunkPriorityLoadingUnloading.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </p>
@@ -429,9 +430,9 @@ $( document ).ready(function() {
     <th>LOD of 4:</th>
   </tr>
   <tr>
-    <td><img src="/images/CubeMarchingLOD1.png" alt="Cube Marching LOD 1" width="100%"/></td>
-    <td><img src="/images/CubeMarchingLOD2.png" alt="Cube Marching LOD 2" width="100%"/></td>
-    <td><img src="/images/CubeMarchingLOD4.png" alt="Cube Marching LOD 4" width="100%"/></td>
+    <td><img src="/images/TerrainGeneration/CubeMarchingLOD1.png" alt="Cube Marching LOD 1" width="100%"/></td>
+    <td><img src="/images/TerrainGeneration/CubeMarchingLOD2.png" alt="Cube Marching LOD 2" width="100%"/></td>
+    <td><img src="/images/TerrainGeneration/CubeMarchingLOD4.png" alt="Cube Marching LOD 4" width="100%"/></td>
   </tr>
 </table>
 
@@ -443,8 +444,8 @@ $( document ).ready(function() {
     <th>Noisy Sphere LOD Gradient</th>
   </tr>
   <tr>
-    <td><img src="/images/LODSmoothSphere.png" alt="Smooth Sphere LOD Gradient:" width="500px"/></td>
-    <td><img src="/images/LODNoisySphere.png" alt="Noisy Sphere LOD Gradient" width="500px"/></td>
+    <td><img src="/images/TerrainGeneration/LODSmoothSphere.png" alt="Smooth Sphere LOD Gradient:" width="500px"/></td>
+    <td><img src="/images/TerrainGeneration/LODNoisySphere.png" alt="Noisy Sphere LOD Gradient" width="500px"/></td>
   </tr>
 </table>
 
@@ -457,12 +458,12 @@ TODO:
 <h2 id="Terrain-Features"><a href="#Terrain-Features" class="headerlink" title="Terrain Features"></a>Terrain Features</h2><h3 id="Terrain-Voxel-Manipulation"><a href="#Terrain-Voxel-Manipulation" class="headerlink" title="Terrain / Voxel Manipulation"></a>Terrain / Voxel Manipulation</h3><p>When we manipulate our voxel terrain, we alter the density values in an area of influence.<br>In our game, we use a spherical brush to accomplish this, resulting in spherical cutouts of the terrain at the target area.</p>
 <p align="center">
 <video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
-  <source src="/images/VoxelManipulation.webm" type="video/webm">
+  <source src="/images/TerrainGeneration/VoxelManipulation.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </p>
 
-<p>In the example above, you can see both additive and subtractive operations. Thankfully, these translate straightforwardly to adding and subtracting from the density values in our target area.</p>
+<p>In the example above, you can see both additive and subtractive operations. Thankfully, these translate straightforwardly to adding and subtracting from the density values in our target area in a radial gradient.</p>
 <p>Below is an interactive demo of the logic functioning in a 2D variant. Mouse over the area to subtract or add from a given area, altering the terrain. These values are either 1 or -1, representing a filled or unfilled area, respectively. As there is no gradient, this will result in unsmooth terrain.</p>
 <p>Click the left mouse button to toggle addition/subtraction.</p>
 <p align="center"><iframe class="child" src="https://www.openprocessing.org/sketch/1051758/embed/" width="500vh" height="700vh"></iframe></p>
@@ -471,7 +472,7 @@ TODO:
 <p>By using proximity loading of our chunks as found at runtime, we may move the player around in the scene to load whichever portion is needed to us.</p>
 <p align="center">
 <video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
-  <source src="/images/EditorMode.webm" type="video/webm">
+  <source src="/images/TerrainGeneration/EditorMode.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
 </p>
@@ -529,7 +530,7 @@ The cost of using components as flags is not insignificant! The trade-off is kno
 ### Setup
 To utilize the speed of Unity\'s provided ECS, chunks were entities that consist of data components and their associated GameObject to store + render the mesh. Along the way, they also get tagged/untagged with "Flag" components to tell the next system to operate on them.
 The ECS chunk, after processing, would contain the following component data:
-![Chunk Components](/images/ChunkComponents.png)
+![Chunk Components](/images/TerrainGeneration/ChunkComponents.png)
 
 ### Why It Didn't Work 
 After all the work setting up systems, components, and way more, it seemed like the team was constantly fighting Unity ECS to make it fit our needs. System order was impossible to configure, command buffers wouldn't execute on the frames we needed, adding and removing components correctly was complex to manage, and what could run within a system was very restrictive.
