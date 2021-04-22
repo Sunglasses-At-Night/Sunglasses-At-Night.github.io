@@ -268,6 +268,15 @@ Similarly if a loaded chunk falls outside of this cube, unload it.
 
 When loading and unloading chunks, it was important to remember that chunks share edge data so borders of chunks cannot be edited without neighboring chunks being loaded first to preserve this "synced" state.
 
+Initial implementations of chunk loading a small region around the player produces the following:
+
+<p align="center">
+<video playsinline autoplay loop muted controls class="desktop-70-mobile-100">
+  <source src="/images/TerrainGeneration/InitialChunkLoading.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+</p>
+
 ### Chunk Serialization
 
 ![Terrain Manager Flow Chart Terrain Serializer](/images/TerrainGeneration/TerrainManagerFlowChartTerrainSerializer.png)
@@ -277,9 +286,6 @@ For our implementation, we used a simple approach for storing chunks to a file. 
 It should be noted that, as a trivial form of optimization, only chunks changed by the player are saved to the disk. Since our terrain generation is deterministic and faster than loading chunks, it is faster to re-generate the chunk on request compared to loading that chunk from the disk. This, in return, also saves on disk space.
 
 These load and unload requests are performed within Unity Jobs to further utilize the player's CPU cores from a multithreaded approach and to keep consistency with the rest of the systems.
-
-
-![Terrain Manager Flow Chart](/images/TerrainGeneration/TerrainManagerJobSystem.png)
 
 ### Performance
 
