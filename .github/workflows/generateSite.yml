@@ -24,6 +24,8 @@ jobs:
           git checkout origin/main -- source/images
           git checkout origin/main -- themes
           git checkout origin/main -- _config.yml
+          git checkout origin/main -- package-lock.json
+          git checkout origin/main -- package.json
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
