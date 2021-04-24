@@ -23,6 +23,7 @@ jobs:
           git checkout origin/main -- source/_posts
           git checkout origin/main -- source/images
           git checkout origin/main -- themes
+          git checkout origin/main -- _config.yml
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
