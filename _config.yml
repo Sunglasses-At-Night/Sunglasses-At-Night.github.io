@@ -34,6 +34,10 @@ skip_render:
 tag_generator:
   enable_index_page: true
 
+# Lazy Loading
+lazysizes:
+  enable: true
+  loadingImage: /images/LazyLoad.png
 
 # Writing
 new_post_name: :title.md # File name of new posts
