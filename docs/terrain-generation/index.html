@@ -88,8 +88,8 @@
         <section class="navbar-section">
             <!-- <div class="navbar-header header-logo"><a href="/">0x00000000 Blog</a></div> -->
         </section>
-        <section class="navbar-center aos-init aos-animate">
-            <a class="btn btn-link text-light aos-init aos-animate" href="/">Home</a>
+        <section class="navbar-center">
+            <a class="btn btn-link text-light" href="/">Home</a>
             
                 <a class="btn btn-link text-light" href="/archives">
                     Posts
@@ -401,9 +401,9 @@ $( document ).ready(function() {
 
 <p>A rough example of 2D priority queueing, a cross-section of the 3D chunk loaded cube, is demonstrated as an interactive demo below. Move your cursor around to see which chunks have priority to be loaded relative to your cursor.</p>
 <p><strong>Note:</strong> This demo’s source code does not reflect the project’s implementation. It is purely for a visual understanding of the chunk loading concept.</p>
-<p align="center">
-<iframe class="child" src="https://www.openprocessing.org/sketch/1052217/embed/"></iframe>
-</p>
+<div style="text-align: center">
+ <button class="btn btn-primary" onclick=" window.open('https://openprocessing.org/sketch/1052217/embed','_blank')">2D Priority Queue Demo</button>
+</div>
 
 <p>The maximum number of chunks a three-stage loop can process is given by the following:<br><code>Max(Number Of High Priority Chunk Count, Number Of Reasonable Chunks Per Stage Loop)</code><br>That is to say that high priority chunks are always processed with low priority chunks filling in any free slots in CPU cores.</p>
 <p>Using a priority queue and updating weights as needed, you get responsive chunk loading that can adapt quickly to, for example, changes in player position:</p>
@@ -476,7 +476,9 @@ TODO:
 <p>In the example above, you can see both additive and subtractive operations. Thankfully, these translate straightforwardly to adding and subtracting from the density values in our target area in a radial gradient.</p>
 <p>Below is an interactive demo of the logic functioning in a 2D variant. Mouse over the area to subtract or add from a given area, altering the terrain. These values are either 1 or -1, representing a filled or unfilled area, respectively. As there is no gradient, this will result in unsmooth terrain.</p>
 <p>Click the left mouse button to toggle addition/subtraction.</p>
-<p align="center"><iframe class="child" src="https://www.openprocessing.org/sketch/1051758/embed/" width="500vh" height="700vh"></iframe></p>
+<div style="text-align: center">
+ <button class="btn btn-primary" onclick=" window.open('https://www.openprocessing.org/sketch/1051758/embed/','_blank')">Brush Deformation Demo</button>
+</div>
 
 <h3 id="Editor-Mode"><a href="#Editor-Mode" class="headerlink" title="Editor Mode"></a>Editor Mode</h3><p>Procedural generation is typically executed at runtime. In other words, our voxel terrain would only be visible upon launching the game into Play Mode.<br>However, this is problematic in the case where we would like to edit our scene. How would we determine where to place a sign sticking out of the ground, or a treasure chest?<br>We’d need a way to edit the scene with the world already constructed. Our solution is editor-time world loading.  </p>
 <p>By using proximity loading of our chunks as found at runtime, we may move the player around in the scene to load whichever portion is needed to us.</p>
@@ -492,7 +494,6 @@ TODO:
 # Final Notes
 ***TODO***
 ~~In conclusion, this project produced an impressive and responsive terrain that makes for great gameplay.~~
-~~In conclusion, the signal disruptor is an award-winning board~~
 
 ## Further Implementations
 - Hot-loading

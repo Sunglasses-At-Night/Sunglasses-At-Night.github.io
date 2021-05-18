@@ -419,9 +419,9 @@ A rough example of 2D priority queueing, a cross-section of the 3D chunk loaded 
 
 **Note:** This demo's source code does not reflect the project's implementation. It is purely for a visual understanding of the chunk loading concept.
 
-<p align="center">
-<iframe class="child" src="https://www.openprocessing.org/sketch/1052217/embed/"></iframe>
-</p>
+<div style="text-align: center">
+ <button class="btn btn-primary" onclick=" window.open('https://openprocessing.org/sketch/1052217/embed','_blank')">2D Priority Queue Demo</button>
+</div>
 
 The maximum number of chunks a three-stage loop can process is given by the following: 
 `Max(Number Of High Priority Chunk Count, Number Of Reasonable Chunks Per Stage Loop)`  
@@ -515,7 +515,9 @@ Below is an interactive demo of the logic functioning in a 2D variant. Mouse ove
 
 Click the left mouse button to toggle addition/subtraction.
 
-<p align="center"><iframe class="child" src="https://www.openprocessing.org/sketch/1051758/embed/" width="500vh" height="700vh"></iframe></p>
+<div style="text-align: center">
+ <button class="btn btn-primary" onclick=" window.open('https://www.openprocessing.org/sketch/1051758/embed/','_blank')">Brush Deformation Demo</button>
+</div>
 
 ### Editor Mode
 
@@ -539,7 +541,6 @@ Entering play mode or edit mode will reconstruct the necessary memory for the vo
 # Final Notes
 ***TODO***
 ~~In conclusion, this project produced an impressive and responsive terrain that makes for great gameplay.~~
-~~In conclusion, the signal disruptor is an award-winning board~~
 
 ## Further Implementations
 - Hot-loading
