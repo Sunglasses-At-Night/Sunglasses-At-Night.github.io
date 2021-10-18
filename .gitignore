@@ -1,3 +1,5 @@
 docs/*
 db.json
 node_modules
+trigger
+.idea/

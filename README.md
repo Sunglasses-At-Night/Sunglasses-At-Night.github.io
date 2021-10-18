@@ -136,7 +136,6 @@ Any major issues will be posted to the PR's thread and they must be fixed before
 
 - Collapsible headers.
 - Load-on-scroll content (for large posts with lots of content).
-- [AOS](https://michalsnik.github.io/aos/)
 - Fix issues with site based on google's and `web.dev`'s site tester.
 - Consider a private testing site/branch for non-complete posts.
 - Consider setting a second push repo on GitHub.
