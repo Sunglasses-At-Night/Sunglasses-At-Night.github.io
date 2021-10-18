@@ -159,12 +159,12 @@ At 1.0, the goal was to get serialization working ASAP and getting past the grad
 // Sample object
 struct Vector3{
     float x, y, z;
-    JSON Serialize() const
+    static JSON Serialize(const Vector3& vec) const
     {
         JSON j;
-        j["x"] = x;
-        j["y"] = y;
-        j["z"] = z;
+        j["x"] = vec.x;
+        j["y"] = vec.y;
+        j["z"] = vec.z;
         return j;
     }
     static Vector3 Deserialize(JSON& json)
@@ -182,7 +182,7 @@ class Serializer{
     template<typename T>
     JSON SerializeToJSON(const T& obj)
     {
-        return obj.Serialize();
+        return T::Serialize(obj);
     }
     template<typename T>
     T DeserializeFromJSON(JSON& json)
@@ -210,7 +210,7 @@ I went with option 1) because we were using glm::vec3 types and did not want to 
 ## Serializer 2.0
 
 You may notice that the serializer 1.0 *does nothing*. It only gives ensures common interface of T (to have a method called Serialize()).
-**Currently the object is responsibly for *how* it serializes itself, what we want is for the *serializer* to be responsible for that.**
+**Currently the object is responsibly for *how* it serializes itself, what we want is for the *serializer* to be responsible for that.** If we had 100 objects, that means we would have to write the specific serialization code for 100+ objects. But with one generic serializer we would theoretically save up to 1/3 of the time writing serialization.
 
 What we currently have:
 ![Serializer 1.0](/images/Reflection-Serializer/serializer_before.png)
