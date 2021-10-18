@@ -612,7 +612,9 @@ Lets take a look at the recursive function from before.
 // !Passing something that isn't supposed to be written as a Json Object will have issues
 void ToJsonRecur(rttr::instance obj, JSON& writer)
 {
+    // If we successfully serialized, it means its a fundamental type
     if(WriteFundamentalType(obj, writer))
+        return;
     rttr::instance localObj;
     // Get the type of the object if it is a wrapper
     if(obj.get_type().get_raw_type().is_wrapper())
