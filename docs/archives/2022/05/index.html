@@ -9,7 +9,7 @@
 
 
 
-<title>Why MVC? | 0x00000000 Blog</title>
+<title>Archives: 2022/5 | 0x00000000 Blog</title>
 
 
 
@@ -121,195 +121,35 @@
 </script>
         <div class="main">
             <div class="container">
-    
-        <article class="post-wrap columns">
-            <style>
-                .div-only-mobile {
-                    display: none;
-                }
-
-                .div-no-mobile {
-                    display: block;
-                }
-
-                @media screen and (max-width: 1280px) {
-                    .div-no-mobile {
-                        display: none
-                    }
-
-                    .div-only-mobile {
-                        display: block;
-                    }
-                }
-
-                ul {
-                    list-style-position: outside;
-                }
-
-                ol ol, ol ul, ul ol, ul ul {
-                    margin: 0 0 0 0;
-                }
-
-                .text-light {
-                    color: #e8e8e8!important;
-                }
-
-            </style>
-            <div class="column col-xl-2"></div>
-            <div class="column col-8 col-xl-12">
-                <header class="post-header">
-                    <h1 class="post-title">
-                        Why MVC?
-                    </h1>
-                    
-                        <div class="post-meta">
-                            
-                                <a class="text-light">Author: </a><a class="text-gray">
-                                        Roland Shum
-                                    </a>
-                                
-                                    <br>
-                                    
-                                        <a class="text-light">Date: </a><a class="text-gray">
-                                                January 27, 2021
-                                            </a>
-                                        
-                                <br>
-                                <a class="text-light">Views: <script>document.write('<img src="//counter.websiteout.net/compte.php?S='+encodeURI(window.location.href)+'&C=9&D=0&N=0&M=0" alt="" border="0"/>');</script></a>
-                        </div>
-                        
-                </header>
-                <div class="post-content">
-                    <h1 id="What-is-MVC"><a href="#What-is-MVC" class="headerlink" title="What is MVC?"></a>What is MVC?</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Hey everyone, lets talk about the Model-View-Controller (MVC) architecture. Writing programs has always been a combat against rising complexity. MVC exploded in popularity around<br>the 2000s when web programming became popular. Today I’ll be talking about how MVC can be a toolkit in your development. The traditional approach of programming works on<br>Input -&gt; Process -&gt; Output approach while MVC works on Controller → Model -&gt; View.</p>
-<p>Unfortunately, the traditional approach usually means the UI coding, the module data, and the module functions are all written in one file. As one can imagine, as the file grows<br>the costs of maintaining all three parts of the code grows, not to mention its lack of testability. This is where MVC comes in. MVC splits the logic three ways: Input, UI, and Data.<br>The UI logic belongs in the View, the input in the Controller, and the data in the Model.</p>
-<p>This separation helps tremendously as each file is dedicated to implementing one thing. So now instead of implementing a ball of spitfire, you’re implementing three different<br>parts of it, then joining them together.</p>
-<h2 id="MVC-Parts"><a href="#MVC-Parts" class="headerlink" title="MVC Parts"></a>MVC Parts</h2><ul>
-<li><strong>Model</strong>: This is the main logic of the module. Anything that deals with backend stuff that only programmers care about belongs here.</li>
-<li><strong>View</strong>: Views are components that display the UI. Any logic to do with UI goes here. Typically, this reads the model data, and generates the UI based off that.</li>
-<li><strong>Controller</strong>: This component handles user interactions, work with the model, and ultimately select a view to render that displays UI. In an MVC application, the view only displays information;<br>the controller handles and responds to user input and interaction.</li>
-</ul>
-<p>The core concepts of MVC are to split things such that they are not dependent on each other. As such, the Model, View, and Controller can be swapped out anytime.<br>For example, if the View were to be swapped out, it would still be referencing the same Model and Controller.</p>
-<p>The diagram below shows what model takes data from, and is aware of, whom. The Controller takes data from both View and Model, while the View takes data from the Model.</p>
-<p><noscript><img src="/images/mvc.png" alt="MVC Diagram"></noscript><img src="/images/LazyLoad.png" alt="MVC Diagram" data-src="/images/mvc.png" class="lazyload"></p>
-<h2 id="Variants"><a href="#Variants" class="headerlink" title="Variants"></a>Variants</h2><p>MVC has been around for a long time now, and there are many variants of MVC flying around. In game development, a popular model is the M-VC (Model - ViewController). In this model,<br>the View and Controller are mixed together because its been implemented in the Engine (Unity for example). So your UI script would be a ViewController, and it will have a reference<br>to the Model it needs to modify.</p>
-<p>Another popular model is the MVVM (Model-View-ViewModel). This model abstracts the View from the Model, putting a ViewModel class in between.</p>
-<p>As with other software patterns, MVC expresses the “core of the solution” to a problem while allowing it to be adapted for each system.<br>Particular MVC designs can vary significantly from the traditional description.</p>
-<h2 id="Pros-and-Cons"><a href="#Pros-and-Cons" class="headerlink" title="Pros and Cons"></a>Pros and Cons</h2><p>Pros:</p>
-<ul>
-<li><strong>Parallel Development</strong> - The MVC modules are all separate from each other, meaning they can be simultaneously developed.</li>
-<li><strong>Better prediction of schedule</strong> - By splitting apart one giant module, a programmer has an easier time estimating the development time of such module.</li>
-<li><strong>Low Coupling</strong> - By its architecture, there is low coupling between all three modules. Swap the View, and you have a UI completely different.</li>
-<li><strong>Scalability</strong> - Responsibility of code is clear, thus it is much easier to maintain and scale the individual modules.</li>
-</ul>
-<p>Cons:</p>
-<ul>
-<li><strong>Low navigability</strong> - The code is now harder to navigate because of a new abstraction, and this abstraction requires the user to first understand how responsibility each part<br>of MVC takes.</li>
-<li><strong>Scattering of code</strong> - Code is now more scattered. Developing a consistent representation in three different compositions can be harder.</li>
-</ul>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>At the end of the day, MVC is a tool to help decouple features and navigate complexity in code. A hallmark of bad MVC are hacks that allow the Module and View to talk to each<br>other. This is <em>very</em> frowned upon as it completely breaks the reason why the architecture is used. A proper implementation would mean the Model does not even need to be<br>aware of the View, as long as the View is fed a Model.</p>
-
+  <div class="columns">
+    <div class="column col-2"></div>
+      <div class="column col-8">
+        <div class="post-wrap archive">
+          
+          
+            
+               
+                  <h3>2022</h3>
+               
+               <div class="card bg-dark">
+                 <div class="card-header">
+                   <div class="card-title h5 text-light">Implementing An Asset Registry</div>
+                   <div class="card-subtitle text-gray">Last Updated: May 21, 2022</div>
+                 </div>
+               <div class="card-footer">
+                        <a class="btn btn-primary" href="/asset-registry/">View Post</a>
+                    </div>
                 </div>
-                
-                        <section class="post-tags">
-                            <div>
-                                <span>Tag(s):</span>
-                                <span class="tag">
-                                    
-                                        
-                                            <a href="/tags/GameDev/"># GameDev</a>
-                                            
-                                            <a href="/tags/UI/"># UI</a>
-                                            
-                                                
-                                </span>
-                            </div>
-                            <div>
-                                <a href="javascript:window.history.back();">back</a>
-                                <span>· </span>
-                                <a href="/">home</a>
-                            </div>
-                        </section>
-                        <section class="post-nav">
-                            
-                                <a class="prev" rel="prev" href="/asset-registry/">
-                                    Implementing An Asset Registry
-                                </a>
-                                
-                                    
-                                        <a class="next" rel="next" href="/modular-imgui/">
-                                            Modular ImGUI
-                                        </a>
-                                        
-                        </section>
-            </div>
-            <div class="column col-xl-2">
-                
-                    
-                        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
+                <br>
+            
+            
+        </div>
+      </div>
+    <div class="column col-2"></div>
     </div>
 </div>
 
-<script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
 
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
-    }
-
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
-
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-</script>
-                            
-            </div>
-        </article>
-</div>
         </div>
         <footer id="footer" class="footer">
     <div class="copyright">
