@@ -115,6 +115,7 @@ My goals for the serialization system
 - Read archetypes from json files
 - Programmers do not need to write serialization code
   - Fully abstracted and written for them, unless specified
+  - **This will save up to 1/3 of the time writing a script!**
 
 In order to achieve the last goal, the only realistic way I could think of was to use a reflection system. I can iterate through an objects properties (picture above) and turn it into JSON something below.
 
@@ -145,7 +146,7 @@ The above seems good right? This was actually a **bad** set of goals. One major 
 
 I started working on the json integration first as I wanted to fullfill the Course's requirement on serialization first, and then do the reflection and GUI as an add on.
 
-> Learning point: In hindsight, in the shortterm this was the right decision, but in the long term a bad one. Anyone can see once laid out that I should have worked with RTTR first, and then wrote the serializer and gui generator with it as a dependancy. Because of this mistake, I was straddled with legacy code that I had to write around.
+> Learning point: In hindsight, while in the short term this was the right decision,the long term was a bad one. Anyone can see once laid out that I should have worked with RTTR first, and then wrote the serializer and gui generator with it as a dependancy. Because of this mistake, I was straddled with legacy code that I had to write around.
 
 ## Serializer 1.0
 The following is the diagram describing the serializer.
@@ -209,13 +210,17 @@ I went with option 1) because we were using glm::vec3 types and did not want to 
 ## Serializer 2.0
 
 You may notice that the serializer 1.0 *does nothing*. It only gives ensures common interface of T (to have a method called Serialize()).
-Currently the object is responsibly for *how* it serializes itself, what we want is for the *serializer* to be responsible for that.
+**Currently the object is responsibly for *how* it serializes itself, what we want is for the *serializer* to be responsible for that.**
 
-<// Draw image here with to describe idea>
+What we currently have:
+![Serializer 1.0](/images/Reflection-Serializer/serializer_before.png)
+
+But what we really want is:
+![Serializer 2.0](/images/Reflection-Serializer/serialize-after.png)
 
 I'll now walk through a simplified version of my Serializer 2.0 and explain the thought process behind it. 
 
-There are 4 main ideas crucial to bringing the initial algorithm together.
+There are 3 main ideas crucial to bringing the initial algorithm together.
 1) Deconstructing a user-defined data type
 2) Understanding how things should be on the JSON side
 3) Dealing with pointers, data structures, and containers
@@ -297,7 +302,7 @@ I used the property name as the key, and the object itself as the value. This se
 
 
 
-> Learning Point: Another mistake I feel like I made is attempting to fit the algorithm I was making **to a given output**. I learned that when it comes to this, its better to let the algorithm do its job, **THEN** examine the outcome. The reason is that deserialization becomes far easier when your algorithm is not filled with edge cases that you smashed in to fit your output.
+> Learning Point: One of the goals were to have the designer change the data from the json file. Thus I wanted the json file to be "human readable". This in turn led to some very poor choices like serializing Vec3 as an array of 3 floats etc. These edge cases piled up instantly and made my deseriailization work a mess. If I were to do this again I would just try to write the base code as intuitively (for a programmer) as possible, and then write a tool to modify  the json file.
 
 
 Take note that this was the *final* output that I have decided on. During the course of developement, there were three different outputs that I tried, and I finally settled on keeping the algorithm clean instead.
