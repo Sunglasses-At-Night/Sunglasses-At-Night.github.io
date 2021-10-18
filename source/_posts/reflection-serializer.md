@@ -90,11 +90,11 @@ So essentially what I did was
 1) Integrate reflection library (RTTR)
 2) Integrate JSON reading and writing data
 3) **For serialization**
-   1) **Use reflection to generate the JSON object**
-   2) **Use JSON object and JSON library to write to file**
+   - **Use reflection to generate the JSON object**
+   - **Use JSON object and JSON library to write to file**
 4) For deserialization
-   1) Read JSON from file to read JSON object
-   2) Use JSON object to read achetypes
+   - Read JSON from file to read JSON object
+   - Use JSON object to read achetypes
 5) Use reflection data to generate editor GUIs for modifying values at runtime
    
 This blog will be focused on json serialization with reflection.
@@ -430,7 +430,10 @@ Even better, RTTR has two methods of identifying containers that cover your STL 
   - Map
   - Multiset
   - Multismap
+  
 And so we will have
+
+
 - C++ Array <-> Sequential Container <-> JSON Array
 - C++ Vector <-> Sequential Container <-> JSON Array
 - C++ Maps <-> Associative Container <-> JSON Objects
