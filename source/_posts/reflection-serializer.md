@@ -462,9 +462,9 @@ def SerializeRecur(obj, jsonObj):
     if not obj.is_class()
         SerializeBasic(obj, jsonObj)
     else if obj.is_associative_container()
-        SerializeAssociativeContainer(obj, jsonObj)
+        WriteArray(obj, jsonObj)
     else if obj.is_sequential_container()
-        SerializeSequentialContainer(obj, jsonObj)
+        WriteAssociative(obj, jsonObj)
     else
         # Get the type of the object if it is a wrapper
         if obj.type.get_raw_type().is_wrapper()
