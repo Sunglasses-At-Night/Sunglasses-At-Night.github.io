@@ -1,5 +1,5 @@
 ---
-title: Writing a JSON serializaer using C++ Reflection
+title: Writing a JSON serializer using C++ Reflection
 author: Roland Shum
 tags: 
 - C++
