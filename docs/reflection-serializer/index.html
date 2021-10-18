@@ -276,6 +276,7 @@ $( document ).ready(function() {
 <li>Read archetypes from json files</li>
 <li>Programmers do not need to write serialization code<ul>
 <li>Fully abstracted and written for them, unless specified</li>
+<li><strong>This will save up to 1/3 of the time writing a script!</strong></li>
 </ul>
 </li>
 </ul>
@@ -300,7 +301,7 @@ $( document ).ready(function() {
 </blockquote>
 <h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><p>I started working on the json integration first as I wanted to fullfill the Course’s requirement on serialization first, and then do the reflection and GUI as an add on.</p>
 <blockquote>
-<p>Learning point: In hindsight, in the shortterm this was the right decision, but in the long term a bad one. Anyone can see once laid out that I should have worked with RTTR first, and then wrote the serializer and gui generator with it as a dependancy. Because of this mistake, I was straddled with legacy code that I had to write around.</p>
+<p>Learning point: In hindsight, while in the short term this was the right decision,the long term was a bad one. Anyone can see once laid out that I should have worked with RTTR first, and then wrote the serializer and gui generator with it as a dependancy. Because of this mistake, I was straddled with legacy code that I had to write around.</p>
 </blockquote>
 <h2 id="Serializer-1-0"><a href="#Serializer-1-0" class="headerlink" title="Serializer 1.0"></a>Serializer 1.0</h2><p>The following is the diagram describing the serializer.</p>
 <p><noscript><img src="/images/Reflection-Serializer/serializermap.png" alt="Mind map of serializer"></noscript><img src="/images/LazyLoad.png" alt="Mind map of serializer" data-src="/images/Reflection-Serializer/serializermap.png" class="lazyload"></p>
@@ -318,10 +319,11 @@ $( document ).ready(function() {
 <blockquote>
 <p>Pondering Point: Should I have written an abstraction over glm (math library)? Common practice lean towards writing abstractions over every library you import, but a lot of glm functions only work because they expect glm functions. Writing our own abstraction just meant writing boilerplate code over the glm ones, and that seemed like a waste of time since we don’t plan on using another math library.</p>
 </blockquote>
-<h2 id="Serializer-2-0"><a href="#Serializer-2-0" class="headerlink" title="Serializer 2.0"></a>Serializer 2.0</h2><p>You may notice that the serializer 1.0 <em>does nothing</em>. It only gives ensures common interface of T (to have a method called Serialize()).<br>Currently the object is responsibly for <em>how</em> it serializes itself, what we want is for the <em>serializer</em> to be responsible for that.</p>
-<p>&lt;// Draw image here with to describe idea&gt;</p>
+<h2 id="Serializer-2-0"><a href="#Serializer-2-0" class="headerlink" title="Serializer 2.0"></a>Serializer 2.0</h2><p>You may notice that the serializer 1.0 <em>does nothing</em>. It only gives ensures common interface of T (to have a method called Serialize()).<br><strong>Currently the object is responsibly for <em>how</em> it serializes itself, what we want is for the <em>serializer</em> to be responsible for that.</strong></p>
+<p>What we currently have:<br><noscript><img src="/images/Reflection-Serializer/serializer_before.png" alt="Serializer 1.0"></noscript><img src="/images/LazyLoad.png" alt="Serializer 1.0" data-src="/images/Reflection-Serializer/serializer_before.png" class="lazyload"></p>
+<p>But what we really want is:<br><noscript><img src="/images/Reflection-Serializer/serialize-after.png" alt="Serializer 2.0"></noscript><img src="/images/LazyLoad.png" alt="Serializer 2.0" data-src="/images/Reflection-Serializer/serialize-after.png" class="lazyload"></p>
 <p>I’ll now walk through a simplified version of my Serializer 2.0 and explain the thought process behind it. </p>
-<p>There are 4 main ideas crucial to bringing the initial algorithm together.</p>
+<p>There are 3 main ideas crucial to bringing the initial algorithm together.</p>
 <ol>
 <li>Deconstructing a user-defined data type</li>
 <li>Understanding how things should be on the JSON side</li>
@@ -366,7 +368,7 @@ $( document ).ready(function() {
 
 
 <blockquote>
-<p>Learning Point: Another mistake I feel like I made is attempting to fit the algorithm I was making <strong>to a given output</strong>. I learned that when it comes to this, its better to let the algorithm do its job, <strong>THEN</strong> examine the outcome. The reason is that deserialization becomes far easier when your algorithm is not filled with edge cases that you smashed in to fit your output.</p>
+<p>Learning Point: One of the goals were to have the designer change the data from the json file. Thus I wanted the json file to be “human readable”. This in turn led to some very poor choices like serializing Vec3 as an array of 3 floats etc. These edge cases piled up instantly and made my deseriailization work a mess. If I were to do this again I would just try to write the base code as intuitively (for a programmer) as possible, and then write a tool to modify  the json file.</p>
 </blockquote>
 <p>Take note that this was the <em>final</em> output that I have decided on. During the course of developement, there were three different outputs that I tried, and I finally settled on keeping the algorithm clean instead.</p>
 <figure class="highlight py"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Version 2</span></span><br><span class="line"><span class="comment"># Kickoff function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Serialize</span>(<span class="params">obj, name</span>):</span></span><br><span class="line">    JSON jsonObj</span><br><span class="line">    SerializeRecur(obj, jsonObj[name])</span><br><span class="line">    <span class="keyword">return</span> jsonObj</span><br><span class="line"></span><br><span class="line"><span class="comment"># Arg0: object we want to serialize</span></span><br><span class="line"><span class="comment"># Arg1: json object to add onto</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SerializeRecur</span>(<span class="params">obj, jsonObj</span>):</span></span><br><span class="line">    <span class="keyword">if</span> obj <span class="keyword">is</span> a basic type</span><br><span class="line">        SerializeBasicType(obj, jsonObj[obj.name()])</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">for</span> each property on obj:</span><br><span class="line">            SerializeRecur(property, jsonObj[property.name()])</span><br><span class="line"></span><br><span class="line">// Possible usage</span><br><span class="line">Outerclass outerClass</span><br><span class="line">Serialize(outerClass, <span class="string">"OuterClass"</span>) </span><br></pre></td></tr></tbody></table></figure>
