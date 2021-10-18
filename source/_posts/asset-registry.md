@@ -277,6 +277,14 @@ but this isn't how most devs like to work. If you're like me, you'd much rather 
 4. link the asset using the modal
 5. continue testing the game/editor as normal
 
+---
+
+## Post Mortem
+
+TODO: I'll write my post mortem after at the end of the semester after we've used the asset registry more
+
+---
+
 ## Useful Resources
 
 Simple Ini parsing library: [mIni](https://github.com/pulzed/mINI)
