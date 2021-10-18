@@ -113,10 +113,9 @@ void LoadRegistry();
 
 void SaveRegistry();
 
-std::weak_ptr<PackageType> GetPackage(const std::string& packageName);
+std::weak_ptr<Package> GetPackage(const std::string& packageName);
 
-template<typename PackageType = Package>
-std::weak_ptr<PackageType> CreatePackage(const std::string& packageName);
+std::weak_ptr<Package> CreatePackage(const std::string& packageName);
 
 bool RemovePackage(const std::string& packageName);
 
