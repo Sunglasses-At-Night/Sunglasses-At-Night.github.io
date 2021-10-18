@@ -5,7 +5,7 @@ tags:
 - C++
 - GameEngine
 - GameDev
-date: 2021-10-34 01:01:01
+date: 2021-10-17 01:01:01
 ---
 # Background
 
@@ -68,7 +68,7 @@ Arc Apellago was a year-long game project that I worked together with several me
 Parts of the engine I worked on
 - Integration of [Real Time Type Reflection (RTTR)](https://www.rttr.org/)
 - **[JSON](https://github.com/nlohmann/json) serialization using RTTR**
-- **[ImGui](https://github.com/ocornut/imgui) Engine GUI generation using RTTR**
+- [ImGui](https://github.com/ocornut/imgui) Engine GUI generation using RTTR
 - Designing archetypes for entities
 
 In addition, I worked on the game as well
@@ -82,7 +82,7 @@ And things outside of the engine
 - Configuring a student Amazon Web Service (AWS) VM to automatically sync the school's git repo to our internal private git server
 - Tracked and scoped technical tasks as part of co-producer work and making sure everyone's workflow was smooth
 
-Today I'll be talking about what I designed for integrating **JSON serialization** as well as **automatically generating [ImGui](https://github.com/ocornut/imgui) GUIS** for our datatypes. While I will be describing a simplified version of what I did, I'm omitting long talks into the many mistakes I've made in the game and will just point them out from time ti time. **I hope this will be useful for people trying to thread on the same path I did.**
+Today I'll be talking about what I used RTTR for in the game engine; mainly for integrating **JSON serialization**. I will be describing a simplified version of what I did and omitting long talks into the many mistakes I've made; I'll only point out my mistakes from time to time. **I hope this will be useful for people trying to thread on the same path I did.** 
 ## What are you talking about?
 
 So essentially what I did was
@@ -90,14 +90,14 @@ So essentially what I did was
 1) Integrate reflection library (RTTR)
 2) Integrate JSON reading and writing data
 3) **For serialization**
-   1) Use reflection to generate the JSON object 
-   2) Use JSON object and JSON library to write to file
+   1) **Use reflection to generate the JSON object**
+   2) **Use JSON object and JSON library to write to file**
 4) For deserialization
    1) Read JSON from file to read JSON object
    2) Use JSON object to read achetypes
-5) **Use reflection data to generate editor GUIs for modifying values at runtime**
+5) Use reflection data to generate editor GUIs for modifying values at runtime
    
-I've bolded what I will be talking about
+This blog will be focused on json serialization with reflection.
 
 ### What is reflection
 Reflection is the ability to inspect, modify, and call methods at runtime. Imagine being able to inspect your type of object, and getting information about it.
@@ -129,20 +129,6 @@ In order to achieve the last goal, the only realistic way I could think of was t
 ```
 
 
-### What is this GUI thing you're talking about?
-[ImGui](https://github.com/ocornut/imgui) is an immediate mode GUI. Its pretty much the best thing to have come to video game programming for devs, and our team used it to create our engine editor.
-
-Check it out if you haven't seen it before! The video below displays what I did with ImGui and reflection.
-
-<p align="center">
-<video playsinline autoplay loop muted controls class="desktop-50-mobile-100">
-  <source src="/images/Reflection-Serializer/imgui_demo.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
-</p>
-
-Notice how you can keep opening up trees under the Behavior component and the relevant scripts will come up? And you can open up the scripts to modify values? If the 'value' is an instance of a class, you can open it up until you hit the base data types (int, float, string, etc).
-
 # Goals and Constraints
 For the serializer to function, I constructed the system with several things in mind.
 - Entity archetype saving and loading to Json
@@ -151,18 +137,9 @@ For the serializer to function, I constructed the system with several things in 
 - Json file is readable to humans
   - Designer can modify from json file
 
-- As a constraint, I 
-
 
 > Learning point:
 The above seems good right? This was actually a **bad** set of goals. One major thing I overlooked was **saving and loading from a scene**. I also screwed up thinking that the **designer modifying from the json file** is a good thing. You want a tool for that instead.
-
-For the GUI reflection...
-- Abstracted from gameplay programmers
-  - Scripts don't have to create their own GUI widgets
-  - Programmers only need to register their scripts with RTTR to benefit from the GUI
-
-> Learning point: Keeping features small and simple is good. Having too many goals complicates your feature and spaghetti starts happening.
 
 # Implementation
 
@@ -174,8 +151,6 @@ I started working on the json integration first as I wanted to fullfill the Cour
 The following is the diagram describing the serializer.
 
 ![Mind map of serializer](/images/Reflection-Serializer/serializermap.png)
-
-
 
 At 1.0, the goal was to get serialization working ASAP and getting past the grading requirments for it. I used the simplest method I know.
 
@@ -678,6 +653,8 @@ With the new algorithm, WriteVariant() is the crux of it all. It attempts to wri
 
 Another side-effect of this version of the algorithm is that we can only kick off the serialization function if the object we're passing in has properties. Meaning the type has to be a jsonObj. However, we can easily use WriteVariant() as the entry point if required.
 
+> Learning Point: Typically, serialization code is paired with deserialization code. Hence the simpler your serialization code, the easier it will be to write your deserialization. For my engine code, I did my own serialization of many glm types, like glm::vec3, early on and this came back to haunt me as I had to keep creating edge cases for detecting a glm::vec3 in my deserialization code. Keep it simple, less things to worry about when writing deserialization.
+
 #### C++ code
 Headed back to the code, lets show the changed toJsonRecur().
 
@@ -863,4 +840,9 @@ static void WriteAssociativeContainer(const variant_associative_view& view, json
 
 And that ends the explanation for writing serialization with Json! I did not come up with the entire thing myself; I had to do quite a lot of research and looking up and seeing other people's code before coming to this solution.
 
+RTTR has its own example of how to do json serialization, and it was from their code that I solved the issues with instances and variants.
 
+# Conclusion
+You usually have to pair a serialization function with a deserialization function, but with this the base is setup such that it'll be easier to do deserialization. If I have time, I'll talk about how to deserialize from the json file to memory; its not particularly hard now that we have a good base setup.
+
+I hope this helps description will help someone in the future doing something similar and avoid the pains I had to trod through.
