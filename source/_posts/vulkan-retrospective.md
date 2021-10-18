@@ -1,5 +1,5 @@
 ---
-title: Vulkan in DeltaBlade 2700: Retrospective
+title: Retrospective on Vulkan in DeltaBlade 2700
 author: Jonathan Bourim
 tags: 
 - Game
