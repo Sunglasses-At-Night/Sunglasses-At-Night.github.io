@@ -65,24 +65,24 @@ I am a Computer Science students at the DigiPen Institute of Technology, and hav
 
 Arc Apellago was a year-long game project that I worked together with several members of the team. Its an action platformer with a focus on dash-attack and jumping around to get to the end of the level. We developed a C++ custom engine from scatch, integrating our own libraries and then using that engine to develop the game.
 
-Parts of the engine I worked on
+Parts of the engine I worked on:
 - Integration of [Real Time Type Reflection (RTTR)](https://www.rttr.org/)
 - **[JSON](https://github.com/nlohmann/json) serialization using RTTR**
 - [ImGui](https://github.com/ocornut/imgui) Engine GUI generation using RTTR
 - Designing archetypes for entities
 
-In addition, I worked on the game as well
+Parts of the game I worked on:
 - Visual effects
 - Post processing effects
 - Player feedback
 
-And things outside of the engine
+And things outside of the engine such as:
 - Configuring a student Azure VM to build our game on every push
   - CI / CD
 - Configuring a student Amazon Web Service (AWS) VM to automatically sync the school's git repo to our internal private git server
 - Tracked and scoped technical tasks as part of co-producer work and making sure everyone's workflow was smooth
 
-Today I'll be talking about what I used RTTR for in the game engine; mainly for integrating **JSON serialization**. I will be describing a simplified version of what I did and omitting long talks into the many mistakes I've made; I'll only point out my mistakes from time to time. **I hope this will be useful for people trying to thread on the same path I did.** 
+This blog will focus on using **reflection for json serialization**. While I used RTTR as a reflection library, I believe the high level concept covers other reflection libraries. During the course of my work, I realized that there aren't many resources on this topic. I will be describing a simplified version of what I did and omitting long talks into the many mistakes I've made; I'll only point out my mistakes from time to time. **I hope this will be useful for people trying to thread on the same path I did.** 
 ## What are you talking about?
 
 So essentially what I did was
@@ -205,7 +205,7 @@ I went with option 1) because we were using glm::vec3 types and did not want to 
 
 >Learning Point: The cache miss point was totally irrelevant. It would never have mattered since the perf I saved was so small. Furthermore, a bunch of these small code and legacy Json files became a massive headache later on development when I refused to just delete them. I should have called a team meeting and insist on removing the legacy code and data instead of putting two different architechture types together
 
->Pondering Point: Should I have written an abstraction over glm (math library)? Common practice lean towards writing abstractions over every library you import, but a lot of glm functions only work because they expect glm functions. Writing our own abstraction just meant writing boilerplate code over the glm ones, and that seemed like a waste of time since we don't plan on using another math library.
+>Pondering Point: Should I have written an abstraction over glm (math library)? Common practice lean towards writing abstractions over every library you import, but a lot of glm functions only work because they expect glm types. Writing our own abstraction just meant writing boilerplate code over the glm ones, and that seemed like a waste of time since we don't plan on using another math library.
 
 ## Serializer 2.0
 
@@ -302,8 +302,9 @@ I used the property name as the key, and the object itself as the value. This se
 
 
 
-> Learning Point: One of the goals were to have the designer change the data from the json file. Thus I wanted the json file to be "human readable". This in turn led to some very poor choices like serializing Vec3 as an array of 3 floats etc. These edge cases piled up instantly and made my deseriailization work a mess. If I were to do this again I would just try to write the base code as intuitively (for a programmer) as possible, and then write a tool to modify  the json file.
+> Learning Point: One of the goals were to have the designer change the data from the json file. Thus I wanted the json file to be "human readable". This in turn led to some very poor choices like serializing Vec3 as an array of 3 floats etc. These edge cases piled up instantly and made my deseriailization work a mess. If I were to do this again I would just try to write the base code as intuitively (for a programmer) as possible, and then write a tool to modify the json file.
 
+>Pondering Point: What if I wrote a tool that converted older version jsons to newer ones? Thinking back, this wasn't much of a choice since there are around 4 json files and its probably not worth it.
 
 Take note that this was the *final* output that I have decided on. During the course of developement, there were three different outputs that I tried, and I finally settled on keeping the algorithm clean instead.
 
@@ -361,7 +362,7 @@ std::shared_ptr<Derived> instance = std::make_shared<Derived>();
 foo.ptr = instance;
 // How do we deal with this??
 ```
-> At the start of the project, we were avoiding shared pointers because we were not doing multithreading and did not think we would need to manage our objects. This turns out to be completely false assumption when we realized our game code had behavior that references other behaviors. This caching became a classic dangling pointer problem. We only noticed this problem a quater of the way through the project, and decided to convert to smart pointers rather then deal with implementing some sort wrapper that acheived the same thing but specific to our engine. There was also a discussion about getting all the references every frame, but that was thrown out once we realized some behaviors *needed* references, like AIs need to know player and the search isn't cheap.
+> At the start of the project, we were avoiding shared pointers because we were not doing multithreading and did not think we would need to manage our objects. This turns out to be completely false assumption when we realized our game code had behavior that references other behaviors. This caching became a classic dangling pointer problem. We only noticed this problem a quater of the way in the project, and decided to convert to smart pointers rather then deal with implementing some wrapper that acheived the same thing but specific to our engine. There was also a discussion about getting all the references every frame, but that was thrown out once we realized some behaviors *needed* references, like AIs need to know player and the search isn't cheap.
 
 So lets revisit our high level algorithm, and modify it. We need to deal with getting, as RTTR defines it, the *raw type* of our object. A raw type is a type *without any qualifiers* (const, volatile, etc) nor any pointer.
 After that, we need to detect if it is a shared_ptr, or something that wraps a value. Luckily, RTTR provides [functionality](https://www.rttr.org/doc/master/classrttr_1_1type.html#ad17345a59c8e3cc8a754eb4ec124581e) that detects if a type is a wrapper type. 
@@ -394,7 +395,7 @@ def SerializeRecur(obj, jsonObj):
         else
             localObj = obj
 
-        # Deal with pointer issues by going to the derived class
+        # Deal with polymorphism issues by going to the derived class
         derivedType = localObj.get_derived_type()
         # Get property list from the derived type
         var property_list = derivedType.get_properties()
@@ -848,6 +849,8 @@ static void WriteAssociativeContainer(const variant_associative_view& view, json
 
 # Conclusion
 You usually have to pair a serialization function with a deserialization function, but with this the base is setup such that it'll be easier to do deserialization. If I have time, I'll talk about how to deserialize from the json file to memory; its not particularly hard now that we have a good base setup.
+
+A couple of things to note: this sample code doesn't handle pointers or void pointers. Moreover, its not exactly efficient since we are calling a ton of copy constructors and assignment constructors. However, it does acheieve the goal of moving the burden of writing serialization to a unified system.
 
 I hope this helps description will help someone in the future doing something similar and avoid the pains I had to trod through.
 
