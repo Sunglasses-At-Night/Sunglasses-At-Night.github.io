@@ -185,8 +185,9 @@
 <p>As DeltaBlade 2700 is intended to be a game enjoyed on as many platforms as possible, particularly the Nintendo Switch, the usage of Vulkan as our rendering backend seemed both a fantastic use-case of the API, as well as a valuable learning experience for myself and others. As the project continues development, so will the graphics framework that hosts the rendering functionality, entitled <strong>Damascus</strong>. </p>
 <h2 id="Personal-Project-Goals"><a href="#Personal-Project-Goals" class="headerlink" title="Personal Project Goals"></a>Personal Project Goals</h2><p>My personal goal for the project is the development of Damascus into a multi-featured graphics framework, including:</p>
 <ul>
-<li><p>Asynchronous rendering, allowing frames to be processed while the previous frame is still in-flight.</p>
-</li>
+<li>Triple Buffering, allowing frames to be processed while the previous frame is still in-flight.</li>
+</ul>
+<ul>
 <li><p>Abstraction of all basic types for automatic memory management, extensibility and convenient construction (particularly for asynchronous rendering, where you need stored copies of each type).</p>
 </li>
 <li><p>Abstracted rendering pipeline creation and utilization by leveraging shader reflection, descriptor set management and automatic uniform uploading.</p>

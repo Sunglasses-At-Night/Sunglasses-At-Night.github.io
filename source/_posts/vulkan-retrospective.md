@@ -22,7 +22,8 @@ As DeltaBlade 2700 is intended to be a game enjoyed on as many platforms as poss
 
 My personal goal for the project is the development of Damascus into a multi-featured graphics framework, including:
 
-* Asynchronous rendering, allowing frames to be processed while the previous frame is still in-flight.
+* Triple Buffering, allowing frames to be processed while the previous frame is still in-flight.
+
 
 * Abstraction of all basic types for automatic memory management, extensibility and convenient construction (particularly for asynchronous rendering, where you need stored copies of each type).
 
