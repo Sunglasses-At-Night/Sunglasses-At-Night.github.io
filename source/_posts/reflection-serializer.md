@@ -846,11 +846,12 @@ static void WriteAssociativeContainer(const variant_associative_view& view, json
 }
 ```
 
-And that ends the explanation for writing serialization with Json! I did not come up with the entire thing myself; I had to do quite a lot of research and looking up and seeing other people's code before coming to this solution.
-
-RTTR has its own example of how to do json serialization, and it was from their code that I solved the issues with instances and variants.
-
 # Conclusion
 You usually have to pair a serialization function with a deserialization function, but with this the base is setup such that it'll be easier to do deserialization. If I have time, I'll talk about how to deserialize from the json file to memory; its not particularly hard now that we have a good base setup.
 
 I hope this helps description will help someone in the future doing something similar and avoid the pains I had to trod through.
+
+
+With that this is the end of this small write up. I did not come up with the entire thing myself; I had to do quite a lot of research and looking up and seeing other people's code before coming to this solution. RTTR has its own example of how to do json serialization, and it was from their code that I solved the issues with instances and variants. 
+
+[Here](https://github.com/ShumWengSang/Reflection-Json-Serializer) is the Github link to the source code used for examples here.
