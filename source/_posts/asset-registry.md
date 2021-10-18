@@ -6,7 +6,7 @@ tags:
 - DeltaBlade2700
 - Engine
 - Core
-date: 2021-17-21 03:01:00
+date: 2021-10-17 03:01:00
 ---
 
 ## Motive
