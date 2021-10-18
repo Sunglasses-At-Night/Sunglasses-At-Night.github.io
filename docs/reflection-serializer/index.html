@@ -171,7 +171,7 @@
                                     <br>
                                     
                                         <a class="text-light">Date: </a><a class="text-gray">
-                                                November 3, 2021
+                                                October 17, 2021
                                             </a>
                                         
                                 <br>
@@ -230,7 +230,7 @@ $( document ).ready(function() {
 <ul>
 <li>Integration of <a target="_blank" rel="noopener" href="https://www.rttr.org/">Real Time Type Reflection (RTTR)</a></li>
 <li><strong><a target="_blank" rel="noopener" href="https://github.com/nlohmann/json">JSON</a> serialization using RTTR</strong></li>
-<li><strong><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui">ImGui</a> Engine GUI generation using RTTR</strong></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui">ImGui</a> Engine GUI generation using RTTR</li>
 <li>Designing archetypes for entities</li>
 </ul>
 <p>In addition, I worked on the game as well</p>
@@ -248,14 +248,14 @@ $( document ).ready(function() {
 <li>Configuring a student Amazon Web Service (AWS) VM to automatically sync the school’s git repo to our internal private git server</li>
 <li>Tracked and scoped technical tasks as part of co-producer work and making sure everyone’s workflow was smooth</li>
 </ul>
-<p>Today I’ll be talking about what I designed for integrating <strong>JSON serialization</strong> as well as <strong>automatically generating <a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui">ImGui</a> GUIS</strong> for our datatypes. While I will be describing a simplified version of what I did, I’m omitting long talks into the many mistakes I’ve made in the game and will just point them out from time ti time. <strong>I hope this will be useful for people trying to thread on the same path I did.</strong></p>
+<p>Today I’ll be talking about what I used RTTR for in the game engine; mainly for integrating <strong>JSON serialization</strong>. I will be describing a simplified version of what I did and omitting long talks into the many mistakes I’ve made; I’ll only point out my mistakes from time to time. <strong>I hope this will be useful for people trying to thread on the same path I did.</strong> </p>
 <h2 id="What-are-you-talking-about"><a href="#What-are-you-talking-about" class="headerlink" title="What are you talking about?"></a>What are you talking about?</h2><p>So essentially what I did was</p>
 <ol>
 <li>Integrate reflection library (RTTR)</li>
 <li>Integrate JSON reading and writing data</li>
 <li><strong>For serialization</strong><ol>
-<li>Use reflection to generate the JSON object </li>
-<li>Use JSON object and JSON library to write to file</li>
+<li><strong>Use reflection to generate the JSON object</strong></li>
+<li><strong>Use JSON object and JSON library to write to file</strong></li>
 </ol>
 </li>
 <li>For deserialization<ol>
@@ -263,9 +263,9 @@ $( document ).ready(function() {
 <li>Use JSON object to read achetypes</li>
 </ol>
 </li>
-<li><strong>Use reflection data to generate editor GUIs for modifying values at runtime</strong></li>
+<li>Use reflection data to generate editor GUIs for modifying values at runtime</li>
 </ol>
-<p>I’ve bolded what I will be talking about</p>
+<p>This blog will be focused on json serialization with reflection.</p>
 <h3 id="What-is-reflection"><a href="#What-is-reflection" class="headerlink" title="What is reflection"></a>What is reflection</h3><p>Reflection is the ability to inspect, modify, and call methods at runtime. Imagine being able to inspect your type of object, and getting information about it.</p>
 <p><noscript><img src="/images/Reflection-Serializer/CPPStruct.png" alt="MyStruct"></noscript><img src="/images/LazyLoad.png" alt="MyStruct" data-src="/images/Reflection-Serializer/CPPStruct.png" class="lazyload"></p>
 <p>Essentially, you can get a MyStructType that describes “Hey I have a string name, an int data, a float bigNumber, and two methods. My name is ‘MyStruct’”.</p>
@@ -283,46 +283,20 @@ $( document ).ready(function() {
 <figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="attr">"MyStruct"</span> : {</span><br><span class="line">	<span class="attr">"name"</span> : <span class="string">"Instance Name"</span>,</span><br><span class="line">	<span class="attr">"data"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="attr">"bigNumber"</span> : <span class="number">2.0</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 
-<h3 id="What-is-this-GUI-thing-you’re-talking-about"><a href="#What-is-this-GUI-thing-you’re-talking-about" class="headerlink" title="What is this GUI thing you’re talking about?"></a>What is this GUI thing you’re talking about?</h3><p><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui">ImGui</a> is an immediate mode GUI. Its pretty much the best thing to have come to video game programming for devs, and our team used it to create our engine editor.</p>
-<p>Check it out if you haven’t seen it before! The video below displays what I did with ImGui and reflection.</p>
-<p align="center">
-<video playsinline="" autoplay="" loop="" muted="" controls="" class="desktop-50-mobile-100">
-  <source src="/images/Reflection-Serializer/imgui_demo.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
-</p>
-
-<p>Notice how you can keep opening up trees under the Behavior component and the relevant scripts will come up? And you can open up the scripts to modify values? If the ‘value’ is an instance of a class, you can open it up until you hit the base data types (int, float, string, etc).</p>
 <h1 id="Goals-and-Constraints"><a href="#Goals-and-Constraints" class="headerlink" title="Goals and Constraints"></a>Goals and Constraints</h1><p>For the serializer to function, I constructed the system with several things in mind.</p>
 <ul>
-<li><p>Entity archetype saving and loading to Json</p>
-</li>
-<li><p>Abstracted from gameplay programmers</p>
-<ul>
+<li>Entity archetype saving and loading to Json</li>
+<li>Abstracted from gameplay programmers<ul>
 <li>Scripts don’t have to care about serializing</li>
 </ul>
 </li>
-<li><p>Json file is readable to humans</p>
-<ul>
+<li>Json file is readable to humans<ul>
 <li>Designer can modify from json file</li>
 </ul>
-</li>
-<li><p>As a constraint, I </p>
 </li>
 </ul>
 <blockquote>
 <p>Learning point:<br>The above seems good right? This was actually a <strong>bad</strong> set of goals. One major thing I overlooked was <strong>saving and loading from a scene</strong>. I also screwed up thinking that the <strong>designer modifying from the json file</strong> is a good thing. You want a tool for that instead.</p>
-</blockquote>
-<p>For the GUI reflection…</p>
-<ul>
-<li>Abstracted from gameplay programmers<ul>
-<li>Scripts don’t have to create their own GUI widgets</li>
-<li>Programmers only need to register their scripts with RTTR to benefit from the GUI</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>Learning point: Keeping features small and simple is good. Having too many goals complicates your feature and spaghetti starts happening.</p>
 </blockquote>
 <h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><p>I started working on the json integration first as I wanted to fullfill the Course’s requirement on serialization first, and then do the reflection and GUI as an add on.</p>
 <blockquote>
@@ -504,6 +478,9 @@ $( document ).ready(function() {
 <p><noscript><img src="/images/Reflection-Serializer/serialize_detail.png" alt="The new plan with detail"></noscript><img src="/images/LazyLoad.png" alt="The new plan with detail" data-src="/images/Reflection-Serializer/serialize_detail.png" class="lazyload"></p>
 <p>With the new algorithm, WriteVariant() is the crux of it all. It attempts to write the object, and if it can’t have several fallbacks, and at the end of it will either return true or fail. Failing means a case we haven’t dealt with yet(pointers for example).</p>
 <p>Another side-effect of this version of the algorithm is that we can only kick off the serialization function if the object we’re passing in has properties. Meaning the type has to be a jsonObj. However, we can easily use WriteVariant() as the entry point if required.</p>
+<blockquote>
+<p>Learning Point: Typically, serialization code is paired with deserialization code. Hence the simpler your serialization code, the easier it will be to write your deserialization. For my engine code, I did my own serialization of many glm types, like glm::vec3, early on and this came back to haunt me as I had to keep creating edge cases for detecting a glm::vec3 in my deserialization code. Keep it simple, less things to worry about when writing deserialization.</p>
+</blockquote>
 <h4 id="C-code"><a href="#C-code" class="headerlink" title="C++ code"></a>C++ code</h4><p>Headed back to the code, lets show the changed toJsonRecur().</p>
 <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">toJsonRecursive</span><span class="params">(<span class="keyword">const</span> instance&amp; obj, json&amp; writer)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">// Dealing with wrapped objects</span></span><br><span class="line">    instance localObj;</span><br><span class="line">    <span class="keyword">if</span>(obj.get_type().get_raw_type().is_wrapper())</span><br><span class="line">        localObj = obj.get_wrapped_instance()</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        localObj = obj;</span><br><span class="line">    <span class="comment">// Handling pointer polymorphism cases</span></span><br><span class="line">    <span class="keyword">auto</span> prop_list = obj2.get_derived_type().get_properties();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> prop : prop_list)</span><br><span class="line">    {</span><br><span class="line">        <span class="comment">// Retrieving value from property</span></span><br><span class="line">        variant prop_value = prop.get_value(obj2);</span><br><span class="line">        <span class="keyword">if</span> (!prop_value)</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// cannot serialize, because we cannot retrieve the value</span></span><br><span class="line">        <span class="comment">// Retrieve name of property</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> name = prop.get_name();</span><br><span class="line">        <span class="comment">// Serialize value of property using name</span></span><br><span class="line">        <span class="keyword">if</span> (!WriteVariant(prop_value, writer[name.data()]))</span><br><span class="line">        {</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Failed to serialize"</span> &lt;&lt; name &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
@@ -517,6 +494,9 @@ $( document ).ready(function() {
 <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteArray</span><span class="params">(<span class="keyword">const</span> variant_sequential_view&amp; view, json&amp; writer)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">// Init array</span></span><br><span class="line">    writer = json::<span class="built_in">array</span>();</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : view)</span><br><span class="line">    {</span><br><span class="line">        WriteVariant(item, writer[i]);</span><br><span class="line">        i++;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteAssociativeContainer</span><span class="params">(<span class="keyword">const</span> variant_associative_view&amp; view, json&amp; writer)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> string_view <span class="title">key_name</span><span class="params">(<span class="string">"key"</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> string_view <span class="title">value_name</span><span class="params">(<span class="string">"value"</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    writer = json::<span class="built_in">array</span>();</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// Dealing with keys = values containers like sets</span></span><br><span class="line">    <span class="keyword">if</span> (view.is_key_only_type())</span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; item : view)</span><br><span class="line">        {</span><br><span class="line">            WriteVariant(item.first, writer[i]);</span><br><span class="line">            i++;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; item : view)</span><br><span class="line">        {</span><br><span class="line">            WriteVariant(item.first, writer[i][key_name.data()]);</span><br><span class="line">            WriteVariant(item.second, writer[i][value_name.data()]);</span><br><span class="line">            i++;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 <p>And that ends the explanation for writing serialization with Json! I did not come up with the entire thing myself; I had to do quite a lot of research and looking up and seeing other people’s code before coming to this solution.</p>
+<p>RTTR has its own example of how to do json serialization, and it was from their code that I solved the issues with instances and variants.</p>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>You usually have to pair a serialization function with a deserialization function, but with this the base is setup such that it’ll be easier to do deserialization. If I have time, I’ll talk about how to deserialize from the json file to memory; its not particularly hard now that we have a good base setup.</p>
+<p>I hope this helps description will help someone in the future doing something similar and avoid the pains I had to trod through.</p>
 
                 </div>
                 
@@ -543,9 +523,13 @@ $( document ).ready(function() {
                         </section>
                         <section class="post-nav">
                             
+                                <a class="prev" rel="prev" href="/asset-registry/">
+                                    Implementing An Asset Registry
+                                </a>
+                                
                                     
-                                        <a class="next" rel="next" href="/asset-registry/">
-                                            Implementing An Asset Registry
+                                        <a class="next" rel="next" href="/why_mvc/">
+                                            Why MVC?
                                         </a>
                                         
                         </section>
