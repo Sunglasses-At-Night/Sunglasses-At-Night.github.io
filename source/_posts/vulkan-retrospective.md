@@ -41,7 +41,7 @@ Traditional rendering APIs like OpenGL assume that all rendering commands are ex
 
 To alleviate this, triple buffering is a technique that uses multiple instances of each rendering object within the engine, so that one set may be being executed / rendered while another is already being processed for execution thereafter. 
 
-[An example can be found in the Khronos Group Vulkan Samples by clicking on this text.](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/swapchain_images/swapchain_images_tutorial.md
+[An example can be found in the Khronos Group Vulkan Samples by clicking on this text.](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/swapchain_images/swapchain_images_tutorial.md)
 
 The success of this implementation is determined by the relative framerate improvements using only a single swapchain image (single-buffered) as all programs would by default, versus the framerate improvements of introducing the additional images and in-flight processing. This will be showcased via ImGui using performance graphs.
 
