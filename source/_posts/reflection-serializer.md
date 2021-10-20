@@ -67,7 +67,7 @@ Arc Apellago was a year-long game project that I worked together with several me
 
 Parts of the engine I worked on:
 - Integration of [Real Time Type Reflection (RTTR)](https://www.rttr.org/)
-- **[JSON](https://github.com/nlohmann/json) serialization using RTTR**
+- **Integration of [JSON for Modern C++](https://github.com/nlohmann/json) serialization using RTTR**
 - [ImGui](https://github.com/ocornut/imgui) Engine GUI generation using RTTR
 - Designing archetypes for entities
 
@@ -108,16 +108,15 @@ Reflection is the ability to inspect, modify, and call methods at runtime. Imagi
 Essentially, you can get a MyStructType that describes "Hey I have a string name, an int data, a float bigNumber, and two methods. My name is 'MyStruct'".
 
 ### Why did you need reflection?
-So my team and I were thinking about serialization, and we realized we did not have much experience with it. 
-
-My goals for the serialization system
+ My goals for the serialization system
 - Be able to serialize any type of object to json with a common interface
 - Read archetypes from json files
-- Programmers do not need to write serialization code
-  - Fully abstracted and written for them, unless specified
+- Serialization fully abstracted
   - **This will save up to 1/3 of the time writing a script!**
 
 In order to achieve the last goal, the only realistic way I could think of was to use a reflection system. I can iterate through an objects properties (picture above) and turn it into JSON something below.
+
+Unfortunately, there is no third party solution that merges both RTTR and Json for Modern C++ libraries together. I had the choice of writing a reflection system, but I chose to use these third party libraries because I wanted to start the game iteration process as fast as possible.
 
 ```json
 {
@@ -854,9 +853,9 @@ You usually have to pair a serialization function with a deserialization functio
 
 A couple of things to note: this sample code doesn't handle pointers or void pointers. Moreover, its not exactly efficient since we are calling a ton of copy constructors and assignment constructors. However, it does acheieve the goal of moving the burden of writing serialization to a unified system.
 
-I hope this helps description will help someone in the future doing something similar and avoid the pains I had to trod through.
+I hope this description will help someone in the future doing something similar and avoid the pains I had to trod through. Please don't try to specialize the serializer to do anything 'specific', you will have pains writing the deserializer. Just write a tool to modify the json instead.
 
 
 With that this is the end of this small write up. I did not come up with the entire thing myself; I had to do quite a lot of research and looking up and seeing other people's code before coming to this solution. RTTR has its own example of how to do json serialization, and it was from their code that I solved the issues with instances and variants. 
 
-[Here](https://github.com/ShumWengSang/Reflection-Json-Serializer) is the Github link to the source code used for examples here.
+[Here is the Github link](https://github.com/ShumWengSang/Reflection-Json-Serializer)  to the source code used for examples here.
