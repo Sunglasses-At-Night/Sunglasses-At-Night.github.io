@@ -108,13 +108,13 @@ Reflection is the ability to inspect, modify, and call methods at runtime. Imagi
 Essentially, you can get a MyStructType that describes "Hey I have a string name, an int data, a float bigNumber, and two methods. My name is 'MyStruct'".
 
 ### Why did you need reflection?
- My goals for the serialization system
-- Be able to serialize any type of object to json with a common interface
-- Read archetypes from json files
-- Serialization fully abstracted
-  - **This will save up to 1/3 of the time writing a script!**
 
-In order to achieve the last goal, the only realistic way I could think of was to use a reflection system. I can iterate through an objects properties (picture above) and turn it into JSON something below.
+During the course of my research on serialization, I realized that there are only two ways to implement the system such that it was extendable and scalable.
+
+| Pros                                      | Cons                                                      |
+|-------------------------------------------|-----------------------------------------------------------|
+| Easy to understand (part of the language) | Cache miss on virtual functions (irrelevant on hindsight) |
+| Easy to implement                         | Each class needs to define how it serializes              |
 
 Unfortunately, there is no third party solution that merges both RTTR and Json for Modern C++ libraries together. I had the choice of writing a reflection system, but I chose to use these third party libraries because I wanted to start the game iteration process as fast as possible.
 

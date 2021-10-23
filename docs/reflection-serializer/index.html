@@ -269,16 +269,23 @@ $( document ).ready(function() {
 <h3 id="What-is-reflection"><a href="#What-is-reflection" class="headerlink" title="What is reflection"></a>What is reflection</h3><p>Reflection is the ability to inspect, modify, and call methods at runtime. Imagine being able to inspect your type of object, and getting information about it.</p>
 <p><noscript><img src="/images/Reflection-Serializer/CPPStruct.png" alt="MyStruct"></noscript><img src="/images/LazyLoad.png" alt="MyStruct" data-src="/images/Reflection-Serializer/CPPStruct.png" class="lazyload"></p>
 <p>Essentially, you can get a MyStructType that describes “Hey I have a string name, an int data, a float bigNumber, and two methods. My name is ‘MyStruct’”.</p>
-<h3 id="Why-did-you-need-reflection"><a href="#Why-did-you-need-reflection" class="headerlink" title="Why did you need reflection?"></a>Why did you need reflection?</h3><p> My goals for the serialization system</p>
-<ul>
-<li>Be able to serialize any type of object to json with a common interface</li>
-<li>Read archetypes from json files</li>
-<li>Serialization fully abstracted<ul>
-<li><strong>This will save up to 1/3 of the time writing a script!</strong></li>
-</ul>
-</li>
-</ul>
-<p>In order to achieve the last goal, the only realistic way I could think of was to use a reflection system. I can iterate through an objects properties (picture above) and turn it into JSON something below.</p>
+<h3 id="Why-did-you-need-reflection"><a href="#Why-did-you-need-reflection" class="headerlink" title="Why did you need reflection?"></a>Why did you need reflection?</h3><p>During the course of my research on serialization, I realized that there are only two ways to implement the system such that it was extendable and scalable.</p>
+<table>
+<thead>
+<tr>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Easy to understand (part of the language)</td>
+<td>Cache miss on virtual functions (irrelevant on hindsight)</td>
+</tr>
+<tr>
+<td>Easy to implement</td>
+<td>Each class needs to define how it serializes</td>
+</tr>
+</tbody></table>
 <p>Unfortunately, there is no third party solution that merges both RTTR and Json for Modern C++ libraries together. I had the choice of writing a reflection system, but I chose to use these third party libraries because I wanted to start the game iteration process as fast as possible.</p>
 <figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="attr">"MyStruct"</span> : {</span><br><span class="line">	<span class="attr">"name"</span> : <span class="string">"Instance Name"</span>,</span><br><span class="line">	<span class="attr">"data"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="attr">"bigNumber"</span> : <span class="number">2.0</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
