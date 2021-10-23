@@ -111,10 +111,76 @@ Essentially, you can get a MyStructType that describes "Hey I have a string name
 
 During the course of my research on serialization, I realized that there are only two ways to implement the system such that it was extendable and scalable.
 
+**1) All serializable types inherit from a common base class ISerializable**
 | Pros                                      | Cons                                                      |
 |-------------------------------------------|-----------------------------------------------------------|
 | Easy to understand (part of the language) | Cache miss on virtual functions (irrelevant on hindsight) |
-| Easy to implement                         | Each class needs to define how it serializes              |
+| Easy to implement                         | **Each class needs to define how it serializes**              |
+
+**2) Serialize through a generic reflection system**
+| Pros                                                           | Cons                                        |
+|----------------------------------------------------------------|---------------------------------------------|
+| **Write once**! (Programmers don't need to write serializing code) | Not a simple concept to grasp for beginners |
+|                                                                | Teammates won't understand until its done   |
+
+The biggest factor here is **time saved**. If I can save time for other programmers, that is a huge win in my book. Let me dive into why the Inheritance route would, in fact, *add time* and how reflection *saves time*.
+
+#### Serialization through inheritance
+The idea is simple, inherit from a base type ISerializable that has a abstract virtual function serialize and deserialize. Now we have a common interface and type (ISerializable) to serialize. Unfortunately, every time we define a new class that inherits from ISerializable we would have to write the serializing code for that class.
+
+```c++
+class ISerializable{
+    public:
+    virtual JSON MemToJSON() const = 0; // Serialize
+    virtual void JSONToMem(JSON) const = 0; // Deserialize
+}
+
+class Player : public ISerializable
+{
+    JSON MemToJSON() const override
+    {
+        // Something here
+    }
+    void JSONToMem(JSON) const override
+    {
+        // Something here
+    }
+}
+class Item: public ISerializable
+{
+    JSON MemToJSON() const override
+    {
+        // Something here
+    }
+    void JSONToMem(JSON) const override
+    {
+        // Something here
+    }
+}
+```
+So what we end up with is something like this image where the programmer has handle serialization **for any custom type that they want serialized.**
+
+![Multiple objects with serialization code](../images/Reflection-Serializer/multiple_serialize_inheritance.png)
+
+This is clearly not the goal! So I took a second look. What if the base type can handle serialization of the child classes? Is it possible to implement something that looks like the below in C++?
+
+![Multiple objects with base serialization code](../images/Reflection-Serializer/baseclassgeneric.png)
+
+Unfortunately, the base class **has** to know about the child class in order to serialize it. In C++, this can only be achieved via the [Curiously Recurring Template Pattern (CRTP) ](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern#:~:text=The%20curiously%20recurring%20template%20pattern,form%20of%20F%2Dbounded%20quantification.). Sprinkle in some [Substitution Failure Is Not An Error (SFINAE)](https://en.cppreference.com/w/cpp/language/sfinae) to identify properties, and you'll get a templated compile-time reflection system.
+
+And so at the end of the day, the only way a generic serializer can only be written through a reflection system, whether its compile time introspection or run time reflection. 
+
+Note: I've been mixing the terms introspection and reflection, but for serialization purposes they mean the same thing.
+
+#### Why RTTR?
+So I knew I wanted a reflection system, I had the choice of either writing one or taking a known solution. After doing a bit of research, I decided to use RTTR because of the following
+
+1) Proven library means less chance of things blowing up
+2) I wrote a [quick reflection system using clang](https://www.youtube.com/watch?v=DUiUBt-fqEY), but we were compiling in MSVC
+3) I couldn't figure out a good way to handle pointers, references, and wrapped types
+4) Using a proven library means getting feature out the door quicker   
+
+And so I decided to use RTTR based on these four decisions.
 
 Unfortunately, there is no third party solution that merges both RTTR and Json for Modern C++ libraries together. I had the choice of writing a reflection system, but I chose to use these third party libraries because I wanted to start the game iteration process as fast as possible.
 
