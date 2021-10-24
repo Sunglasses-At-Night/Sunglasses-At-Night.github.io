@@ -54,7 +54,7 @@ $( document ).ready(function() {
 
 Roland Shum: Engine Developer
 
-I am a Computer Science students at the DigiPen Institute of Technology, and have been working on game projects together for several years.
+I am a Senior at CS at DigiPen Institute of Technology, and have worked on multiple game projects for the past few years.
 
 [Here](https://store.steampowered.com/search/?developer=Handshake%20Firm) are some games I have worked on and published:
 
@@ -63,7 +63,7 @@ I am a Computer Science students at the DigiPen Institute of Technology, and hav
 
 ## Introduction
 
-Arc Apellago was a year-long game project that I worked together with several members of the team. Its an action platformer with a focus on dash-attack and jumping around to get to the end of the level. We developed a C++ custom engine from scatch, integrating our own libraries and then using that engine to develop the game.
+Arc Apellago was a year-long Sophompore game project that I worked together with several members of the team. Its an action platformer with a focus on dash-attack and jumping around to get to the end of the level. We developed a C++ custom engine from scatch, integrating our own libraries and then using that engine to develop the game.
 
 Parts of the engine I worked on:
 - Integration of [Real Time Type Reflection (RTTR)](https://www.rttr.org/)
