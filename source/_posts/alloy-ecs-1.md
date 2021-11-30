@@ -19,7 +19,7 @@ An Entity Component System (ECS) is a programming paradigm often used in games f
 
 While they come in many flavors, there are three main ideas to an ECS paradigm:
 - **Entity**: The parent or owner of a group of components. An Entity can be as simple as an ID, or as complex as a game object.
-- **Component**: An attribute an entity can have. Con range from plain-old-data (POD) to complex behavior.
+- **Component**: An attribute an entity can have. Can range from plain-old-data (POD) to complex behavior.
 - **System**: A method of updating components, often called component systems for specificity.
 
 These three things give ECS its name.
