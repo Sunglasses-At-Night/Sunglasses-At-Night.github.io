@@ -9,7 +9,7 @@
 
 
 
-<title>Retrospective on Vulkan in DeltaBlade 2700 | 0x00000000 Blog</title>
+<title>Alloy Entity Component System - Retrospective | 0x00000000 Blog</title>
 
 
 
@@ -159,19 +159,19 @@
             <div class="column col-8 col-xl-12">
                 <header class="post-header">
                     <h1 class="post-title">
-                        Retrospective on Vulkan in DeltaBlade 2700
+                        Alloy Entity Component System - Retrospective
                     </h1>
                     
                         <div class="post-meta">
                             
                                 <a class="text-light">Author: </a><a class="text-gray">
-                                        Jonathan Bourim
+                                        Calin Gavriliuc
                                     </a>
                                 
                                     <br>
                                     
                                         <a class="text-light">Date: </a><a class="text-gray">
-                                                October 18, 2021
+                                                November 15, 2021
                                             </a>
                                         
                                 <br>
@@ -180,34 +180,115 @@
                         
                 </header>
                 <div class="post-content">
-                    <p><noscript><img src="/images/Vulkan/vulkan_logo.png"></noscript><img src="/images/LazyLoad.png" data-src="/images/Vulkan/vulkan_logo.png" class="lazyload"></p>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p><strong>Vulkan</strong> is a low-level, cross-platform rendering API that is designed to abstract modern graphics architectures while maintaining the maximum level of programmability. Before Vulkan, programmers would use APIs such as OpenGL and D3D11 for rendering. As real-time simulation matured, graphics programmers were looking for ways to optimize the rendering pipeline for their specific uses. With previous APIs, this was a massive limitation. Now, with the release of Vulkan, programmers now have more control than ever in specifying all details of a program’s rendering functionality. </p>
-<p>As DeltaBlade 2700 is intended to be a game enjoyed on as many platforms as possible, particularly the Nintendo Switch, the usage of Vulkan as our rendering backend seemed both a fantastic use-case of the API, as well as a valuable learning experience for myself and others. As the project continues development, so will the graphics framework that hosts the rendering functionality, entitled <strong>Damascus</strong>. </p>
-<h2 id="Personal-Project-Goals"><a href="#Personal-Project-Goals" class="headerlink" title="Personal Project Goals"></a>Personal Project Goals</h2><p>My personal goal for the project is the development of Damascus into a multi-featured graphics framework, including:</p>
+                    <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="DeltaBlade-2700"><a href="#DeltaBlade-2700" class="headerlink" title="DeltaBlade 2700"></a>DeltaBlade 2700</h3><p>Internally called <em>Project SwitchBlade</em>, this project is a remake of the original DeltaBlade 2700 with Nintendo Switch support - hence the name ‘’SwitchBlade”. This project was taken on by team Handshake Firm while full-time college students. This team consists of ten programmers, myself included, and a sound designer.</p>
+<p>The original game can be found here: <br><a target="_blank" rel="noopener" href="https://store.steampowered.com/app/1143450/DeltaBlade_2700/">DeltaBlade 2700</a> <br><noscript><img src="/images/TerrainGeneration/DeltaBlade2700.jpg" alt="DeltaBlade 2700"></noscript><img src="/images/LazyLoad.png" alt="DeltaBlade 2700" data-src="/images/TerrainGeneration/DeltaBlade2700.jpg" class="lazyload"></p>
+<h3 id="Entity-Component-System"><a href="#Entity-Component-System" class="headerlink" title="Entity Component System"></a>Entity Component System</h3><p>An Entity Component System (ECS) is a programming paradigm often used in games for separating, often duplicate, logic.</p>
+<p>While they come in many flavors, there are three main ideas to an ECS paradigm:</p>
 <ul>
-<li>Triple Buffering, allowing frames to be processed while the previous frame is still in-flight.</li>
+<li><strong>Entity</strong>: The parent or owner of a group of components. An Entity can be as simple as an ID, or as complex as a game object.</li>
+<li><strong>Component</strong>: An attribute an entity can have. Con range from plain-old-data (POD) to complex behavior.</li>
+<li><strong>System</strong>: A method of updating components, often called component systems for specificity.</li>
 </ul>
+<p>These three things give ECS its name.</p>
+<p>For example, applying these concepts:</p>
 <ul>
-<li><p>Abstraction of all basic types for automatic memory management, extensibility and convenient construction (particularly for asynchronous rendering, where you need stored copies of each type).</p>
-</li>
-<li><p>Abstracted rendering pipeline creation and utilization by leveraging shader reflection, descriptor set management and automatic uniform uploading.</p>
-</li>
-<li><p>Advanced mesh features such as instancing, which would allow particle emitters to store buffers of contiguous data of each particle, for example.</p>
-</li>
-<li><p>Multi-threaded command buffer recording using secondary command buffers.</p>
+<li><strong>Want</strong>: A box in a game that is rendered and can collide.</li>
+<li><strong>Entity</strong>: A box.</li>
+<li><strong>Components</strong>: A Transform, Render, Collider, and Physics.</li>
+<li><strong>Systems</strong>: One system for each component that updates that component each time step.</li>
+</ul>
+<p>Generally, an ECS will provide the following functionality:</p>
+<ul>
+<li>Ability to create/destroy an entity</li>
+<li>Ability to add/remove/modify components to/from/on an entity</li>
+<li>Ability to update components</li>
+</ul>
+<p>This concept is not new, and most popular game engines will use ECS in some form.</p>
+<p>My implementation has been named <strong>Alloy</strong>. This library will generally be referred to as <em>Alloy</em> from this point on.</p>
+<h2 id="Goals-amp-Restrictions"><a href="#Goals-amp-Restrictions" class="headerlink" title="Goals &amp; Restrictions"></a>Goals &amp; Restrictions</h2><h3 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h3><p>Alloy’s goals, in order:</p>
+<ol>
+<li><strong>Cross-Platform Support</strong>: Must support Windows, Nintendo Switch’s Horizon OS, Linux, Mac OS X, and more for development and release requirements.</li>
+<li><strong>Update Loop Performance</strong>: The majority of the time will be spent updating components, so this should be optimized for.</li>
+<li><strong>Usability &amp; Documentation</strong>: If nobody can / knows how to use Alloy, it might as well not exist.</li>
+<li><strong>Utilities &amp; Tools &amp; Features</strong>: Quality of life additions and work improves usability, reduces mistakes, and assists with debugging.</li>
+</ol>
+<h3 id="Restrictions"><a href="#Restrictions" class="headerlink" title="Restrictions"></a>Restrictions</h3><p>As professor Dimitri Volper would say: “There is no free lunch.”</p>
+<p>Essentially, “one-size-fits-all” does not exist. You must give something up to gain something.</p>
+<p>The following was chosen to be sacrificed:</p>
+<ul>
+<li><strong>No component references</strong>: Due to backend performance reasons.</li>
+<li><strong>A lack of extensive tools and utilities</strong>: Due to not using a public library and a lack of development time/needs.</li>
+<li><strong>Secondary performance</strong>: Most of the library, Alloy, is blazing fast, but only at the expense of some features.</li>
+<li><strong>Debugging</strong>: While partly available, complexity often balloons when performance improves.</li>
+</ul>
+<h2 id="Development-Process"><a href="#Development-Process" class="headerlink" title="Development Process"></a>Development Process</h2><h3 id="Research"><a href="#Research" class="headerlink" title="Research"></a>Research</h3><p>Starting, I began with exploring other ECS libraries, most notably <a target="_blank" rel="noopener" href="https://unity.com/dots">Unity DOTS</a> and <a target="_blank" rel="noopener" href="https://github.com/skypjack/entt">EnTT</a>. The former is an implementation I had experience working with, which the later was one my teammates had used before.</p>
+<p>I also did much research on articles and blog posts about ECs, such as all thirteen parts of <a target="_blank" rel="noopener" href="https://skypjack.github.io/2019-02-14-ecs-baf-part-1/">ECS Back and Forth</a> and both <a target="_blank" rel="noopener" href="https://www.david-colson.com/2020/02/09/making-a-simple-ecs.html">How to make a simple entity-component-system in C++</a> and the <a target="_blank" rel="noopener" href="https://ajmmertens.medium.com/building-an-ecs-2-archetypes-and-vectorization-fe21690805f9">Building an ECS</a> series.</p>
+<h3 id="Designing-and-Developing"><a href="#Designing-and-Developing" class="headerlink" title="Designing and Developing"></a>Designing and Developing</h3><p>Ultimately, I went with the design that was most in line with my goals. I designed Alloy to be an SoA Archetype-based ECS after testing other possible implementations.</p>
+<p>During the development process, I used Clang Tidy, Clang’s address sanitization, <a target="_blank" rel="noopener" href="https://valgrind.org/">Valgrind</a>, and compiled with the LLVM Clang, GCC, and MSVC compilers, with warnings, to ensure a high-quality codebase.</p>
+<h3 id="Testing-and-Debugging"><a href="#Testing-and-Debugging" class="headerlink" title="Testing and Debugging"></a>Testing and Debugging</h3><p>To ensure the quality of the library, a plethora of test cases and benchmarks were written. For validity, <a target="_blank" rel="noopener" href="https://github.com/google/googletest">Google Test</a> was used and, for consistency, <a target="_blank" rel="noopener" href="https://github.com/google/benchmark">Google Benchmark</a> was used.</p>
+<p>The use of tests, paired with the use of this library in a game, allowed for me to solve many bugs and for Alloy to become stable. This also allowed me to further performance profile the library within real applications.</p>
+<p>To profile Alloy, I used the Linux profiling tool <code>perf</code>, Microsoft Visual Studio’s Profiling and Diagnostics Tools, and <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.hfx933">Intel’s VTune Profiler</a>.</p>
+<h2 id="Final-Achievements"><a href="#Final-Achievements" class="headerlink" title="Final Achievements"></a>Final Achievements</h2><h3 id="Alloy-Library"><a href="#Alloy-Library" class="headerlink" title="Alloy Library"></a>Alloy Library</h3><p>The following describes the layout of Alloy in memory:</p>
+<p><noscript><img src="/images/AlloyECS/AlloyLayout.jpg" alt="Alloy Layout"></noscript><img src="/images/LazyLoad.png" alt="Alloy Layout" data-src="/images/AlloyECS/AlloyLayout.jpg" class="lazyload"></p>
+<p>Alloy, despite being complex and performant, has a simple interface.</p>
+<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Alloy/Alloy.h"</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define a component</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Component</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">    <span class="keyword">int</span> var;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a space for an entity to live</span></span><br><span class="line">X::Space space{};</span><br><span class="line"><span class="comment">// Create a new entity</span></span><br><span class="line">X::Entity entity = space.CreateEntity();</span><br><span class="line"><span class="comment">// Give the entity a Component that is constructed with { 1 }</span></span><br><span class="line">space.EmplaceComponent&lt;Component&gt;(entity, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Update over all entities in the space that have Component</span></span><br><span class="line">space.Update&lt;Component&gt;([](X::Entity entity, Component&amp; component) {</span><br><span class="line">    <span class="comment">// Edit the component's values</span></span><br><span class="line">    ++component.var;</span><br><span class="line">});</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove Component from the entity</span></span><br><span class="line">space.RemoveComponent&lt;Component&gt;(entity);</span><br><span class="line"><span class="comment">// Destroy the entity</span></span><br><span class="line">space.DestroyEntity(entity);</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h3><p>To fully tune and test Alloy, I compared it to a few popular c++ ECS libraries using a heavily modified version of <a target="_blank" rel="noopener" href="https://github.com/abeimler/ecs_benchmark">ECS Benchmark</a>.</p>
+<p>As of Alloy v6:<br><noscript><img src="/images/AlloyECS/AlloyPerformance.png" alt="Alloy Performance"></noscript><img src="/images/LazyLoad.png" alt="Alloy Performance" data-src="/images/AlloyECS/AlloyPerformance.png" class="lazyload"></p>
+<p><strong>Note</strong>: The data is color-coded on a scale of green to red, more performant to less performant, respectively.</p>
+<p>At a glance, Alloy ECS is quite performant.<br>Due to the architecture chosen, Alloy is less-performant when creating/destroying entities or adding/removing components as the goal was update speed - which it dominates in.</p>
+<h2 id="Hindsight"><a href="#Hindsight" class="headerlink" title="Hindsight"></a>Hindsight</h2><h3 id="Issues-amp-Mitigations"><a href="#Issues-amp-Mitigations" class="headerlink" title="Issues &amp; Mitigations"></a>Issues &amp; Mitigations</h3><p>As Michele Caini, known as <code>@skypjack</code> on GitHub and wrote the widely used EnTT, has said:</p>
+<blockquote>
+<p>I started developing <code>EnTT</code> for the wrong reason: my goal was to design an entity-component system to beat another well known open source solution both in terms of performance and possibly memory usage.</p>
+</blockquote>
+<p>Due to my choice of  goals and restrictions, issues came up during development:</p>
+<ul>
+<li><strong>Issue</strong>: POD / Aggregate Data / Blittable components only.<ul>
+<li><strong>Mitigation</strong>: The ability for some more complex functionality was added, given:<ul>
+<li>The component can be copied using an assignment operator, copy constructor, move constructor, or <code>memcpy</code> (preferred).</li>
+<li>The component either does not need a destructor or implements one.</li>
+</ul>
 </li>
 </ul>
-<h2 id="Methodology-amp-Process-Documentation"><a href="#Methodology-amp-Process-Documentation" class="headerlink" title="Methodology &amp; Process Documentation"></a>Methodology &amp; Process Documentation</h2><h3 id="Triple-Buffering"><a href="#Triple-Buffering" class="headerlink" title="Triple Buffering"></a>Triple Buffering</h3><p>Traditional rendering APIs like OpenGL assume that all rendering commands are executed before the beginning of the next render pass. This means that the GPU will stall and wait until all the commands have been executed and everything has been rasterized to the screen before continuing program execution. This is a tremendous amount of unnecessary waiting. </p>
-<p>To alleviate this, triple buffering is a technique that uses multiple instances of each rendering object within the engine, so that one set may be being executed / rendered while another is already being processed for execution thereafter. </p>
-<p><a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/performance/swapchain_images/swapchain_images_tutorial.md">An example can be found in the Khronos Group Vulkan Samples by clicking on this text.</a></p>
-<p>The success of this implementation is determined by the relative framerate improvements using only a single swapchain image (single-buffered) as all programs would by default, versus the framerate improvements of introducing the additional images and in-flight processing. This will be showcased via ImGui using performance graphs.</p>
-<h3 id="Vulkan-Type-Abstraction"><a href="#Vulkan-Type-Abstraction" class="headerlink" title="Vulkan Type Abstraction"></a>Vulkan Type Abstraction</h3><p>Vulkan types are effectively pointers that are provided from their respective Create functions to an opaque handle. Before that, they are “null handles” and contain only a null address. </p>
-<p>Damascus extends these basic types to facilitate the underlying Vulkan type, extended class information for our own purposes, as well as self-destruct when leaving scope if the underlying type is created. </p>
-<p>The success of this implementation is determined by the program’s ability to execute custom user code, as well as perform automatic cleanup on leaving scope and exiting the program. As Vulkan validation layers will explicitly error if memory isn’t freed, this is easy to evaluate.</p>
-<h3 id="Render-Pipelines"><a href="#Render-Pipelines" class="headerlink" title="Render Pipelines"></a>Render Pipelines</h3><p>&lt;*Section to be completed by Milestone 2*&gt;</p>
-<h3 id="Meshes-and-Buffers"><a href="#Meshes-and-Buffers" class="headerlink" title="Meshes and Buffers"></a>Meshes and Buffers</h3><p>&lt;*Section to be completed in final submission at semester end*&gt;</p>
-<h3 id="Multithreading"><a href="#Multithreading" class="headerlink" title="Multithreading"></a>Multithreading</h3><p>&lt;*Section to be completed in final submission at semester end*&gt;</p>
-<h2 id="Projection-Analysis-Discussion-amp-Conclusion"><a href="#Projection-Analysis-Discussion-amp-Conclusion" class="headerlink" title="Projection Analysis, Discussion &amp; Conclusion"></a>Projection Analysis, Discussion &amp; Conclusion</h2><p>&lt;*Section to be completed in final submission at semester end*&gt;</p>
+</li>
+<li><strong>Issue</strong>: No component references can be stored.<ul>
+<li><strong>Mitigation</strong>: As component lookup is O(1) (constant time), a <code>ComponentWrapper</code> was implemented that is a safer proxy for <code>GetComponentTemporary</code>.</li>
+</ul>
+</li>
+<li><strong>Issue</strong>: Lack of debugging.<ul>
+<li><strong>Mitigation</strong>: Unfortunately, not much could be done here. I personally dealt with as many issues myself as possible, but also developed tools - an entity viewer, component editor, etc - to help mitigate this.</li>
+</ul>
+</li>
+</ul>
+<h2 id="References-Future-Work-and-More"><a href="#References-Future-Work-and-More" class="headerlink" title="References, Future Work, and More"></a>References, Future Work, and More</h2><h3 id="Special-Thanks"><a href="#Special-Thanks" class="headerlink" title="Special Thanks"></a>Special Thanks</h3><p><strong>Jonathan Bourim</strong> for extensive help designing, implementing, testing, and debugging.</p>
+<p><strong>Jordan Hoffmann</strong> for extensive testing and debugging.</p>
+<p><strong><em>All</em> Members of team Handshake Firm</strong> for working with a non-standard ECS implementation and assisting with the development of Alloy.</p>
+<h3 id="Future-Work"><a href="#Future-Work" class="headerlink" title="Future Work"></a>Future Work</h3><p>In the future, I would like to:</p>
+<ul>
+<li>Add <em>lots</em> of debugging support.</li>
+<li>Add <em>lots</em> of utilities.</li>
+<li>Write extensive documentation.</li>
+<li>Compare memory consumption to other popular c++ ECS libraries.</li>
+<li>Advanced update loop query filtering.</li>
+<li>Vectorizing operations as batch requests.</li>
+</ul>
+<p>Other Research Areas:</p>
+<ul>
+<li>Sparse set implementation with paging.</li>
+<li>Component hierarchies, groups, etc.</li>
+<li>Building in a custom memory manager for better cache performance of operations.</li>
+<li>Solving the issue of pointer invalidation many ECS libraries have.</li>
+</ul>
+<h3 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h3><p><a target="_blank" rel="noopener" href="https://store.steampowered.com/app/1143450/DeltaBlade_2700/">DeltaBlade 2700</a> : An Action-Packed Competitive Local Multiplayer Brawler with Explosive, Fast-Paced Sword Combat and Jetpacks.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/skypjack/entt">EnTT</a> : A feature-filled popular ECS library</p>
+<p><a target="_blank" rel="noopener" href="https://unity.com/dots">Unity DOTS</a> : An archetype-based ECS implementation in C# for the Unity game engine.</p>
+<p><a target="_blank" rel="noopener" href="https://flecs.docsforge.com/">Flecs</a> : An interesting implementation of an ECS system that allows for many non-standard paradigms.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apples/ginseng">Ginseng</a> : An ECS library that was designed to be used in games and for ease-of-use.</p>
+<p><a target="_blank" rel="noopener" href="https://skypjack.github.io/2019-02-14-ecs-baf-part-1/">ECS Back and Forth</a> : A series of posts about implementing ECS.</p>
+<p><a target="_blank" rel="noopener" href="https://www.david-colson.com/2020/02/09/making-a-simple-ecs.html">How to make a simple entity-component-system in C++</a> : Covers sparse sets and the logic behind using them. </p>
+<p><a target="_blank" rel="noopener" href="https://ajmmertens.medium.com/building-an-ecs-2-archetypes-and-vectorization-fe21690805f9">Building an ECS</a> : Covers data packing and add/remove operation graph representation.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/abeimler/ecs_benchmark">ECS Benchmark</a> : For benchmarking the performance of popular c++ ECS libraries.</p>
+<p><a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.hfx933">Intel’s VTune Profiler</a> : A very useful profiling tool to find bottlenecks and performance issues. </p>
 
                 </div>
                 
@@ -217,15 +298,9 @@
                                 <span class="tag">
                                     
                                         
-                                            <a href="/tags/Game/"># Game</a>
+                                            <a href="/tags/ECS/"># ECS</a>
                                             
-                                            <a href="/tags/DeltaBlade-2700/"># DeltaBlade 2700</a>
-                                            
-                                            <a href="/tags/Vulkan/"># Vulkan</a>
-                                            
-                                            <a href="/tags/Graphics/"># Graphics</a>
-                                            
-                                            <a href="/tags/Damascus/"># Damascus</a>
+                                            <a href="/tags/GameDev/"># GameDev</a>
                                             
                                                 
                                 </span>
@@ -238,13 +313,9 @@
                         </section>
                         <section class="post-nav">
                             
-                                <a class="prev" rel="prev" href="/alloy-ecs-1/">
-                                    Alloy Entity Component System - Retrospective
-                                </a>
-                                
                                     
-                                        <a class="next" rel="next" href="/asset-registry/">
-                                            Implementing An Asset Registry
+                                        <a class="next" rel="next" href="/vulkan-retrospective/">
+                                            Retrospective on Vulkan in DeltaBlade 2700
                                         </a>
                                         
                         </section>
