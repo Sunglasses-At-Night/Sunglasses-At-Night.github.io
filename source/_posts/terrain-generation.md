@@ -59,10 +59,12 @@ Jonathan Bourim: Graphics Engineer & Engine Programmer
 
 We are Computer Science students at the DigiPen Institute of Technology, and have been working on game projects together for several years.
 
-[Here](https://store.steampowered.com/search/?developer=Handshake%20Firm) are some game we have worked on:
+Here are some games we have worked on:
 
-![ArcApellago](/images/TerrainGeneration/ArcApellago.jpg)
-![DeltaBlade2700](/images/TerrainGeneration/DeltaBlade2700.jpg)
+[Arc Apellago](https://store.steampowered.com/app/1454430/Arc_Apellago/) \
+![Arc Apellago](/images/TerrainGeneration/ArcApellago.jpg) \
+[DeltaBlade 2700](https://store.steampowered.com/app/1143450/DeltaBlade_2700/) \
+![DeltaBlade 2700](/images/TerrainGeneration/DeltaBlade2700.jpg)
 
 ## Introduction
 
@@ -71,8 +73,6 @@ Project Cleanser is a year-long team game project that we've been working on tog
 While we were brainstorming ideas for our new, year-long game project, we encountered many interesting videos showcasing voxel techniques, such as procedural world generation and deformation.
 
 Inspired by Astroneer, we decided to implement a similar method of terrain generation and deformation for our project.
-
-[Some Inspiration](https://www.youtube.com/watch?v=NG1gJvdCE4Q)
 
 ## What Is It
 
