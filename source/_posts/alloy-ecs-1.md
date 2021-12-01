@@ -65,7 +65,7 @@ Starting, I began with exploring other ECS libraries, most notably [Unity DOTS](
 I also did much research on articles and blog posts about ECs, such as all thirteen parts of [ECS Back and Forth](https://skypjack.github.io/2019-02-14-ecs-baf-part-1/) and both [How to make a simple entity-component-system in C++](https://www.david-colson.com/2020/02/09/making-a-simple-ecs.html) and the [Building an ECS](https://ajmmertens.medium.com/building-an-ecs-2-archetypes-and-vectorization-fe21690805f9) series.
 
 ### Designing and Developing
-Ultimately, I went with the design that was most in line with my goals. I designed Alloy to be an SoA Archetype-based ECS after testing other possible implementations.
+Ultimately, I went with the design that was most in line with my goals. I designed Alloy to be a Struct of Arrays (SoA), as opposed to an Array of Structs (AoS), implementation Archetype-based ECS after testing other possible implementations.
 
 During the development process, I used Clang Tidy, Clang's address sanitization, [Valgrind](https://valgrind.org/), and compiled with the LLVM Clang, GCC, and MSVC compilers, with warnings, to ensure a high-quality codebase.
 
