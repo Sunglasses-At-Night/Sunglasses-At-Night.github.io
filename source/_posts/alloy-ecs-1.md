@@ -6,13 +6,15 @@ tags:
 - GameDev
 date: 2021-11-15 01:01:01
 ---
+
 ## Introduction
 ### DeltaBlade 2700
+![DeltaBlade 2700](/images/TerrainGeneration/DeltaBlade2700.jpg)
+
 Internally called _Project SwitchBlade_, this project is a remake of the original DeltaBlade 2700 with Nintendo Switch support - hence the name ''SwitchBlade". This project was taken on by team Handshake Firm while full-time college students. This team consists of ten programmers, myself included, and a sound designer.
 
 The original game can be found here: \
-[DeltaBlade 2700](https://store.steampowered.com/app/1143450/DeltaBlade_2700/) \
-![DeltaBlade 2700](/images/TerrainGeneration/DeltaBlade2700.jpg)
+[DeltaBlade 2700](https://store.steampowered.com/app/1143450/DeltaBlade_2700/)
 
 ### Entity Component System
 An Entity Component System (ECS) is a programming paradigm often used in games for separating, often duplicate, logic.
@@ -79,11 +81,20 @@ To profile Alloy, I used the Linux profiling tool `perf`, Microsoft Visual Studi
 ## Final Achievements
 ### Alloy Library
 
-The following describes the layout of Alloy in memory:
+The following describes the layout of Alloy in memory (as of Alloy v5):
 
 ![Alloy Layout](/images/AlloyECS/AlloyLayout.jpg)
 
-Alloy, despite being complex and performant, has a simple interface.
+During run time, being an archetype-based ECS, Alloy pools entities with similar component make ups. In the case of DeltaBlade 2700, the following archetype graph is generated:
+
+![Alloy Layout](/images/AlloyECS/AlloyArchetypeGraph.png)
+
+Notes: 
+- This graph displayes archetype component operations as a directional graph as either an addition or removal of any given component.
+- Not all nodes hold entities.
+- The binary values are bitset representations of what components any given archetype holds.
+
+Alloy, despite being complex and performant, has a simple interface:
 
 ```c++
 #include "Alloy/Alloy.h"
@@ -159,7 +170,10 @@ In the future, I would like to:
 - Write extensive documentation.
 - Compare memory consumption to other popular c++ ECS libraries.
 - Advanced update loop query filtering.
+  - `AnyOf`, `OneOf`, `AnyOfAsParentType`, etc.
+- Improve `ComponentWrapper*`s.
 - Vectorizing operations as batch requests.
+- Ability to parallelize `X::Update`s.
 
 Other Research Areas:
 - Sparse set implementation with paging.
