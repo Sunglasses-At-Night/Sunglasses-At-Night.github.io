@@ -180,8 +180,9 @@
                         
                 </header>
                 <div class="post-content">
-                    <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="DeltaBlade-2700"><a href="#DeltaBlade-2700" class="headerlink" title="DeltaBlade 2700"></a>DeltaBlade 2700</h3><p>Internally called <em>Project SwitchBlade</em>, this project is a remake of the original DeltaBlade 2700 with Nintendo Switch support - hence the name ‘’SwitchBlade”. This project was taken on by team Handshake Firm while full-time college students. This team consists of ten programmers, myself included, and a sound designer.</p>
-<p>The original game can be found here: <br><a target="_blank" rel="noopener" href="https://store.steampowered.com/app/1143450/DeltaBlade_2700/">DeltaBlade 2700</a> <br><noscript><img src="/images/TerrainGeneration/DeltaBlade2700.jpg" alt="DeltaBlade 2700"></noscript><img src="/images/LazyLoad.png" alt="DeltaBlade 2700" data-src="/images/TerrainGeneration/DeltaBlade2700.jpg" class="lazyload"></p>
+                    <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="DeltaBlade-2700"><a href="#DeltaBlade-2700" class="headerlink" title="DeltaBlade 2700"></a>DeltaBlade 2700</h3><p><noscript><img src="/images/TerrainGeneration/DeltaBlade2700.jpg" alt="DeltaBlade 2700"></noscript><img src="/images/LazyLoad.png" alt="DeltaBlade 2700" data-src="/images/TerrainGeneration/DeltaBlade2700.jpg" class="lazyload"></p>
+<p>Internally called <em>Project SwitchBlade</em>, this project is a remake of the original DeltaBlade 2700 with Nintendo Switch support - hence the name ‘’SwitchBlade”. This project was taken on by team Handshake Firm while full-time college students. This team consists of ten programmers, myself included, and a sound designer.</p>
+<p>The original game can be found here: <br><a target="_blank" rel="noopener" href="https://store.steampowered.com/app/1143450/DeltaBlade_2700/">DeltaBlade 2700</a></p>
 <h3 id="Entity-Component-System"><a href="#Entity-Component-System" class="headerlink" title="Entity Component System"></a>Entity Component System</h3><p>An Entity Component System (ECS) is a programming paradigm often used in games for separating, often duplicate, logic.</p>
 <p>While they come in many flavors, there are three main ideas to an ECS paradigm:</p>
 <ul>
@@ -228,9 +229,17 @@
 <h3 id="Testing-and-Debugging"><a href="#Testing-and-Debugging" class="headerlink" title="Testing and Debugging"></a>Testing and Debugging</h3><p>To ensure the quality of the library, a plethora of test cases and benchmarks were written. For validity, <a target="_blank" rel="noopener" href="https://github.com/google/googletest">Google Test</a> was used and, for consistency, <a target="_blank" rel="noopener" href="https://github.com/google/benchmark">Google Benchmark</a> was used.</p>
 <p>The use of tests, paired with the use of this library in a game, allowed for me to solve many bugs and for Alloy to become stable. This also allowed me to further performance profile the library within real applications.</p>
 <p>To profile Alloy, I used the Linux profiling tool <code>perf</code>, Microsoft Visual Studio’s Profiling and Diagnostics Tools, and <a target="_blank" rel="noopener" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.hfx933">Intel’s VTune Profiler</a>.</p>
-<h2 id="Final-Achievements"><a href="#Final-Achievements" class="headerlink" title="Final Achievements"></a>Final Achievements</h2><h3 id="Alloy-Library"><a href="#Alloy-Library" class="headerlink" title="Alloy Library"></a>Alloy Library</h3><p>The following describes the layout of Alloy in memory:</p>
+<h2 id="Final-Achievements"><a href="#Final-Achievements" class="headerlink" title="Final Achievements"></a>Final Achievements</h2><h3 id="Alloy-Library"><a href="#Alloy-Library" class="headerlink" title="Alloy Library"></a>Alloy Library</h3><p>The following describes the layout of Alloy in memory (as of Alloy v5):</p>
 <p><noscript><img src="/images/AlloyECS/AlloyLayout.jpg" alt="Alloy Layout"></noscript><img src="/images/LazyLoad.png" alt="Alloy Layout" data-src="/images/AlloyECS/AlloyLayout.jpg" class="lazyload"></p>
-<p>Alloy, despite being complex and performant, has a simple interface.</p>
+<p>During run time, being an archetype-based ECS, Alloy pools entities with similar component make ups. In the case of DeltaBlade 2700, the following archetype graph is generated:</p>
+<p><noscript><img src="/images/AlloyECS/AlloyArchetypeGraph.png" alt="Alloy Layout"></noscript><img src="/images/LazyLoad.png" alt="Alloy Layout" data-src="/images/AlloyECS/AlloyArchetypeGraph.png" class="lazyload"></p>
+<p>Notes: </p>
+<ul>
+<li>This graph displayes archetype component operations as a directional graph as either an addition or removal of any given component.</li>
+<li>Not all nodes hold entities.</li>
+<li>The binary values are bitset representations of what components any given archetype holds.</li>
+</ul>
+<p>Alloy, despite being complex and performant, has a simple interface:</p>
 <figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Alloy/Alloy.h"</span></span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define a component</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Component</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">    <span class="keyword">int</span> var;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a space for an entity to live</span></span><br><span class="line">X::Space space{};</span><br><span class="line"><span class="comment">// Create a new entity</span></span><br><span class="line">X::Entity entity = space.CreateEntity();</span><br><span class="line"><span class="comment">// Give the entity a Component that is constructed with { 1 }</span></span><br><span class="line">space.EmplaceComponent&lt;Component&gt;(entity, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Update over all entities in the space that have Component</span></span><br><span class="line">space.Update&lt;Component&gt;([](X::Entity entity, Component&amp; component) {</span><br><span class="line">    <span class="comment">// Edit the component's values</span></span><br><span class="line">    ++component.var;</span><br><span class="line">});</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove Component from the entity</span></span><br><span class="line">space.RemoveComponent&lt;Component&gt;(entity);</span><br><span class="line"><span class="comment">// Destroy the entity</span></span><br><span class="line">space.DestroyEntity(entity);</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h3><p>To fully tune and test Alloy, I compared it to a few popular c++ ECS libraries using a heavily modified version of <a target="_blank" rel="noopener" href="https://github.com/abeimler/ecs_benchmark">ECS Benchmark</a>.</p>
@@ -269,8 +278,13 @@
 <li>Add <em>lots</em> of utilities.</li>
 <li>Write extensive documentation.</li>
 <li>Compare memory consumption to other popular c++ ECS libraries.</li>
-<li>Advanced update loop query filtering.</li>
+<li>Advanced update loop query filtering.<ul>
+<li><code>AnyOf</code>, <code>OneOf</code>, <code>AnyOfAsParentType</code>, etc.</li>
+</ul>
+</li>
+<li>Improve <code>ComponentWrapper*</code>s.</li>
 <li>Vectorizing operations as batch requests.</li>
+<li>Ability to parallelize <code>X::Update</code>s.</li>
 </ul>
 <p>Other Research Areas:</p>
 <ul>
