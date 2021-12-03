@@ -39,6 +39,7 @@ The following sub-sections are organized in layers of abstraction. I'll start wi
 In an effort to address [design goal 1](#Design-Goals), we can reference all assets by name and store the dictionary between name and path inside a separate file. This would look something like this:
 
 ``ini file:``
+
 ```ini
 frog_texture = "Assets/Images/Frog/frog_green.png"
 bat_texture = "Assets/Images/Bat/bat_texture_new.png"
@@ -47,6 +48,7 @@ bat_texture = "Assets/Images/Bat/bat_texture_new.png"
 ```
 
 ``c++ code:``
+
 ```c++
 std::unordered_map<std::string, std::string> Assets;
 
@@ -135,6 +137,7 @@ Now that we've built a full abstraction model, let's try to address some of the 
 ### Additional Feature 1: sub-packages
 
 If you simply make packages capable of also storing references to other packages, they can act very similar to symbolic directories. Here's how that might look in the INI
+
 ```ini
 [ClassicMode]
 SubPackage:Environment = _ClassicEnvironment
@@ -159,6 +162,7 @@ Asset:Rocks = Assets/Game/Textures/Particles/rock_bits.png
 
 ...etc...
 ```
+
 Using a flat format like this allows multiple packages to reference the same sub-package without having duplicate data. That way you can organize the data in multiple ways at the same time and use the organization that works best for the use case
 
 > Note: this is no longer a syntactically correct ini file because it uses both ':' and '='. [The library I'm using](https://github.com/pulzed/mINI) allows this but you may need to represent your data differently if you're using a different ini parser
@@ -217,6 +221,10 @@ std::shared_ptr<AMusic> MenuMusic = UIAudio->GetAssetChecked<AMusic>("MenuMusic"
 
 This feature is purely syntactical but it speeds up development significantly and keeps packages from being a burden to use
 
+#### Post Mortem
+
+While the registry paths were great in theory, they ended up encouraging an unfortunate coding style in practice. Users would end up creating interfaces that took a single string representing the entire registry path - not too different than a file path. As a result, the registry had to do far more map lookups than necessary and didn't pass around packages like they were intended. If I were to redesign this, I might remove this feature entirely unfortunately.
+
 ### Additional Feature 4: Editor
 
 You've officially made it to the fun part. This is where the pretty pictures and gifs live! When developing the registry it became quickly apparent that the ini was going to blow up and become increasingly difficult to parse. To solve this, I wanted to allow users to modify it in a better environment than a text editor. Using ImGui I made the following tree based editor
@@ -236,8 +244,8 @@ The editor supports
 - copying the [registry path](#Additional-Feature-3-Registry-Paths) of assets and packages to the clipboard
 - copying the name of assets and packages to the clipboard
 
-
 ### Additional Feature 5: Error Handling Modals
+
 I could've called this project complete at this point. I'd met all the [design goals](#Design-Goals), made a great editor, and provided several ways to access, read, and modify the data. What's important to remember however, is that I'm implementing this for humans. And humans are known for two things:
 
 1. They're lazy. They don't want to use a system if it's not stupid easy
@@ -246,7 +254,6 @@ I could've called this project complete at this point. I'd met all the [design g
 all decent systems have some form of error logging but all great systems can completely resolve the errors without crashing. I'm of course striving for greatness. Let's consider the worst case scenario:
 
 > A user renames a core file such as a default shader from 'Assets/Game/Shaders/forwardVert.glsl' to 'Assets/Game/Shaders/forwardVert_Renamed.glsl' and forgets to modify the ini
-
 
 With the proposed system, the game would crash immediately. The best we could do is return nullptr or throw an exception and hope it's caught but realistically, what could the renderer possibly do? It can't render anything without a shader and there's no way for the renderer to find it.
 
@@ -276,18 +283,23 @@ but this isn't how most devs like to work. If you're like me, you'd much rather 
 4. link the asset using the modal
 5. continue testing the game/editor as normal
 
----
+### Additional Feature 6: Hot Loading
 
-## Post Mortem
+One request I routinely the other developers was asset hot-loading. This essentially required two things:
 
-TODO: I'll write my post mortem after at the end of the semester after we've used the asset registry more
+- Implementing a virtual ``Reload`` method in the Asset Class
+- Subscribe to the OS filesystem events to track when a file is modified and call ``Reload`` when it is
+
+the first step is self explanatory to anyone who understands inheritance, but the second will involve writing OS specific code and wrapping it in an abstraction layer. For windows, I followed [this great resource by Jim Beveridge](https://qualapps.blogspot.com/2010/05/understanding-readdirectorychangesw.html) and for Linux I used inotify.
 
 ---
 
 ## Useful Resources
 
-Simple Ini parsing library: [mIni](https://github.com/pulzed/mINI)
+Simple INI parsing library: [mINI](https://github.com/pulzed/mINI)
 
 Basic, cross platform ImGui interface that I used for the modals: [Hello, Dear ImGui](https://github.com/pthom/hello_imgui)
 
 How Unreal Engine handles assets: [docs.unrealengine.com](https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/AssetManagement/)
+
+[Understanding ReadDirectoryChangesW](https://qualapps.blogspot.com/2010/05/understanding-readdirectorychangesw.html)
