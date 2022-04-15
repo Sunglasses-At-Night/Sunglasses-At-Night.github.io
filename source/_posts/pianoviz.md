@@ -1,5 +1,5 @@
 ---
-title: The making of PianoViz: An augmented Reality Piano Assistant
+title: The making of PianoViz - An augmented Reality Piano Assistant
 
 author: Jordan Hoffmann
 
