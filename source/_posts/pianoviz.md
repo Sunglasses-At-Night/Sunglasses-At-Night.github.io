@@ -120,7 +120,7 @@ To work with this limitation, we decided to shear the note track so that we coul
 
 | Vertical                                                | Sheared                                            |
 |:-------------------------------------------------------:|:--------------------------------------------------:|
-| ![vertical](../\images\PianoViz\unsheared.png) | ![sheared](../images\PianoViz\Shear.png) |
+| ![vertical](../images/PianoViz/unsheared.png) | ![sheared](../images/PianoViz/Shear.png) |
 
 ## [Objective 3] Putting it all together
 
